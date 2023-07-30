@@ -50,6 +50,8 @@ public class ResourceManager {
             ResourceManager.sprites.put("health", loadSprites("powerups/health.png"));
             ResourceManager.sprites.put("shield", loadSprites("powerups/shield.png"));
             ResourceManager.sprites.put("speed", loadSprites("powerups/speed.png"));
+            ResourceManager.sprites.put("dmgup", loadSprites("powerups/dmgup.png"));
+            ResourceManager.sprites.put("lives", loadSprites("powerups/lives.png"));
             ResourceManager.sprites.put("bg", loadSprites("floor/bg.bmp"));
             ResourceManager.sprites.put("menu", loadSprites("menu/title.png"));
         } catch (IOException e) {

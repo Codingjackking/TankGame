@@ -10,8 +10,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.List;
 /**
  * @author anthony-pc
  */
@@ -26,6 +29,7 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
 
+    List<GameObject> gobjs = new ArrayList<>();
     /**
      *
      */
@@ -72,11 +76,22 @@ public class GameWorld extends JPanel implements Runnable {
         this.world = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH,
                 GameConstants.GAME_SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
-//        InputStreamReader isr = new InputStreamReader(ResourceManager.class.getClassLoader().getResourceAsStream("maps/map1.csv"));
-//        BufferedReader mapReader = new BufferedReader(
-//                isr
-//        );
-
+        InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("maps/map1.csv")));
+        try (BufferedReader mapReader = new BufferedReader (isr)) {
+            int row = 0;
+            String[] gameItems;
+            while (mapReader.ready()) {
+                gameItems = mapReader.readLine().strip().split(",");
+                for (int col = 0; col < gameItems.length; col++) {
+                    String gameObject = gameItems[col];
+                    if ("0".equals(gameObject)) continue;
+                    this.gobjs.add(GameObject.newInstance(gameObject,col*30, row*30));
+                    }
+                row++;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("tank1"));
         p1 = new Player(t1);
@@ -93,7 +108,7 @@ public class GameWorld extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
-        buffer.drawImage(ResourceManager.getSprite("bg"), 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, null);
+        //buffer.drawImage(ResourceManager.getSprite("bg"), 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, null);
         this.t1.drawImage(buffer);
         this.t2.drawImage(buffer);
         g2.drawImage(world, 0, 0, null);
