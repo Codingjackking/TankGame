@@ -5,13 +5,12 @@ import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.Resources.ResourceManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * @author anthony-pc
@@ -41,10 +40,11 @@ public class GameWorld extends JPanel implements Runnable {
             while (true) {
                 this.tick++;
                 this.t1.update(); // update tank
+                this.t2.update();
                 this.repaint();   // redraw game
                 /*
-                 * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
-                 * loop run at a fixed rate per/sec. 
+                 * Sleep for 1000/144 ms (~6.9ms). This is done to have our
+                 * loop run at a fixed rate per/sec.
                 */
                 Thread.sleep(1000 / 144);
             }
@@ -72,12 +72,16 @@ public class GameWorld extends JPanel implements Runnable {
         this.world = new BufferedImage(GameConstants.GAME_SCREEN_WIDTH,
                 GameConstants.GAME_SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
+//        InputStreamReader isr = new InputStreamReader(ResourceManager.class.getClassLoader().getResourceAsStream("maps/map1.csv"));
+//        BufferedReader mapReader = new BufferedReader(
+//                isr
+//        );
+
 
         t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("tank1"));
         p1 = new Player(t1);
         t2 = new Tank(900, 300, 0, 0, (short) 0, ResourceManager.getSprite("tank2"));
         p2 = new Player(t2);
-
 
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         this.lf.getJf().addKeyListener(tc1);
@@ -91,6 +95,7 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D buffer = world.createGraphics();
         buffer.drawImage(ResourceManager.getSprite("bg"), 0, 0, GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT, null);
         this.t1.drawImage(buffer);
-        this.t2.drawImage(buffer);        g2.drawImage(world, 0, 0, null);
+        this.t2.drawImage(buffer);
+        g2.drawImage(world, 0, 0, null);
     }
 }

@@ -10,23 +10,43 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ResourceManager {
-    private final static Map<String, BufferedImage> sprites = new HashMap();
+    private final static Map<String, BufferedImage> sprites = new HashMap<>();
+
+    private final static Map<String, String> spriteInfo = new HashMap<>() {{
+       put("bullet", "bullet/bullet.jpg");
+    }};
     private final static Map<String, List<BufferedImage>> animation = new HashMap<>();
     private final static Map<String, Clip> sounds = new HashMap<>();
 
+
     private static BufferedImage loadSprites(String path) throws IOException {
-        return ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResource(path)));
+        return ImageIO.read(
+                Objects.requireNonNull(ResourceManager
+                        .class
+                        .getClassLoader()
+                        .getResource(path)));
     }
+
+    /* Debugging for loading sprites
+    private static BufferedImage loadSprites(String path) throws IOException {
+        URL resourceUrl = ResourceManager.class.getClassLoader().getResource(path);
+        if (resourceUrl == null) {
+            throw new RuntimeException("Resource not found: " + path);
+        }
+        return ImageIO.read(resourceUrl);
+    }
+    */
+
     private static void initSprites() {
         try {
             ResourceManager.sprites.put("tank1", loadSprites("tank/tank1.png"));
             ResourceManager.sprites.put("tank2", loadSprites("tank/tank2.png"));
-            ResourceManager.sprites.put("bullet", loadSprites("bullets/bullet.png"));
-            ResourceManager.sprites.put("rocket1", loadSprites("bullets/rocket1.png"));
-            ResourceManager.sprites.put("rocket2", loadSprites("bullets/rocket2.png"));
-            ResourceManager.sprites.put("break1", loadSprites("walls/break1.png"));
-            ResourceManager.sprites.put("break2", loadSprites("walls/break2.png"));
-            ResourceManager.sprites.put("unbreak", loadSprites("walls/unbreak.png"));
+            ResourceManager.sprites.put("bullet", loadSprites("bullet/bullet.jpg"));
+            ResourceManager.sprites.put("rocket1", loadSprites("bullet/rocket1.png"));
+            ResourceManager.sprites.put("rocket2", loadSprites("bullet/rocket2.png"));
+            ResourceManager.sprites.put("break1", loadSprites("walls/break1.jpg"));
+            ResourceManager.sprites.put("break2", loadSprites("walls/break2.jpg"));
+            ResourceManager.sprites.put("unbreak", loadSprites("walls/unbreak.jpg"));
             ResourceManager.sprites.put("health", loadSprites("powerups/health.png"));
             ResourceManager.sprites.put("shield", loadSprites("powerups/shield.png"));
             ResourceManager.sprites.put("speed", loadSprites("powerups/speed.png"));
