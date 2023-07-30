@@ -1,6 +1,6 @@
 package tankgame.game;
 
-import tankrotationexample.GameConstants;
+import tankgame.GameConstants;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;

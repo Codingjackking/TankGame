@@ -1,6 +1,6 @@
-package tankrotationexample.menus;
+package tankgame.menus;
 
-import tankrotationexample.Launcher;
+import tankgame.Launcher;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

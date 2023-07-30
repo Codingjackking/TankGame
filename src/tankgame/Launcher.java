@@ -1,8 +1,9 @@
 package tankgame;
 
-import tankrotationexample.game.GameWorld;
-import tankrotationexample.menus.EndGamePanel;
-import tankrotationexample.menus.StartMenuPanel;
+import tankgame.Resources.ResourceManager;
+import tankgame.game.GameWorld;
+import tankgame.menus.EndGamePanel;
+import tankgame.menus.StartMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -96,6 +97,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) {
+        ResourceManager.loadResources();
         (new Launcher()).initUIComponents();
     }
 }
