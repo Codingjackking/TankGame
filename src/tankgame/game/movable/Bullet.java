@@ -67,10 +67,10 @@ public class Bullet extends GameObject {
         return hitBox.getBounds();
     }
 
-    @Override
-    public String toString() {
-        return "x=" + x + ", y=" + y + ", angle=" + angle;
-    }
+//    @Override
+//    public String toString() {
+//        return "x=" + x + ", y=" + y + ", angle=" + angle;
+//    }
 
     public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
