@@ -1,9 +1,11 @@
-package tankgame.game;
+package tankgame.game.immovable;
+
+import tankgame.game.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class BreakableWall extends GameObject{
+public class BreakableWall extends GameObject {
     float x,y;
     BufferedImage img;
     public BreakableWall(float x, float y, BufferedImage break1) {

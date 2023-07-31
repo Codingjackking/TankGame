@@ -1,9 +1,9 @@
 package tankgame.game;
 
 import tankgame.Resources.ResourceManager;
+import tankgame.game.immovable.*;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 
 public abstract class GameObject {

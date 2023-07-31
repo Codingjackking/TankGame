@@ -1,9 +1,11 @@
-package tankgame.game;
+package tankgame.game.immovable;
+
+import tankgame.game.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Wall extends GameObject{
+public class Wall extends GameObject {
     float x,y;
     BufferedImage img;
     public Wall(float x, float y, BufferedImage unbreak) {

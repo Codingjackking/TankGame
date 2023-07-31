@@ -1,6 +1,9 @@
 package tankgame.game;
 
 import tankgame.GameConstants;
+import tankgame.Resources.ResourceManager;
+import tankgame.game.movable.Bullet;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -9,7 +12,7 @@ import java.awt.image.BufferedImage;
  *
  * @author anthony-pc
  */
-public class Tank{
+public class Tank  {
 
     private float x;
     private float y;
@@ -17,14 +20,27 @@ public class Tank{
     private float vy;
     private float angle;
 
-    private float R = 5;
-    private float ROTATIONSPEED = 3.0f;
+    private final Rectangle hitBox;
+    private final float R = 5;
+    private final float ROTATIONSPEED = 3.0f;
 
+    private int health = 5;
+    private final int life = 3;
+    Bullet b;
     private BufferedImage img;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
+    private boolean ShootPressed;
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         this.x = x;
@@ -33,6 +49,8 @@ public class Tank{
         this.vy = vy;
         this.img = img;
         this.angle = angle;
+        this.hitBox = new Rectangle((int) x, (int) y,this.img.getWidth(), this.img.getHeight());
+
     }
 
     void setX(float x){ this.x = x; }
@@ -55,6 +73,9 @@ public class Tank{
         this.LeftPressed = true;
     }
 
+    void toggleShootPressed() {
+        this.ShootPressed = true;
+    }
     void unToggleUpPressed() {
         this.UpPressed = false;
     }
@@ -71,6 +92,9 @@ public class Tank{
         this.LeftPressed = false;
     }
 
+    void unToggleShootPressed() {
+        this.ShootPressed = false;
+    }
     void update() {
         if (this.UpPressed) {
             this.moveForwards();
@@ -87,8 +111,9 @@ public class Tank{
         if (this.RightPressed) {
             this.rotateRight();
         }
+        if (this.ShootPressed  && GameWorld.tickCount % 40 == 0) {
 
-
+        }
     }
 
     private void rotateLeft() {
@@ -100,35 +125,57 @@ public class Tank{
     }
 
     private void moveBackwards() {
-        vx =  Math.round(R * Math.cos(Math.toRadians(angle)));
-        vy =  Math.round(R * Math.sin(Math.toRadians(angle)));
-        x -= vx;
-        y -= vy;
-       checkBorder();
-    }
-
-    private void moveForwards() {
         vx = Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = Math.round(R * Math.sin(Math.toRadians(angle)));
+        x -= vx;
+        y -= vy;
+        checkBorder();
+        moveBound();
+    }
+
+//    @Override
+    public void moveForwards() {
+        vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
+        vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
         y += vy;
         checkBorder();
+        moveBound();
     }
 
+    public int getLife() {
+        return this.life;
+    }
 
-    private void checkBorder() {
+    public void hitTank() {
+        if (this.health > 1) {
+            --this.health;
+        } else if (this.life > 1) {
+        }
+    }
+
+    private void moveBound() {
+//        super.setHitBox();
+        this.hitBox.setLocation((int) this.x, (int) this.y);
+    }
+
+    public void checkBorder() {
         if (x < 30) {
             x = 30;
         }
-        if (x >= GameConstants.GAME_SCREEN_WIDTH - 88) {
-            x = GameConstants.GAME_SCREEN_WIDTH - 88;
+        if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
+            x = GameConstants.GAME_WORLD_WIDTH - 88;
         }
-        if (y < 40) {
-            y = 40;
+        if (y < 30) {
+            y = 30;
         }
-        if (y >= GameConstants.GAME_SCREEN_HEIGHT - 80) {
-            y = GameConstants.GAME_SCREEN_HEIGHT - 80;
+        if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
+            y = GameConstants.GAME_WORLD_HEIGHT - 80;
         }
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox.getBounds();
     }
 
     @Override
@@ -136,15 +183,36 @@ public class Tank{
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
 
-
-    void drawImage(Graphics g) {
+//    @Override
+    public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
-        rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
+        rotation.rotate(Math.toRadians(angle), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-        g2d.setColor(Color.RED);
-        //g2d.rotate(Math.toRadians(angle), bounds.x + bounds.width/2, bounds.y + bounds.height/2);
-        g2d.drawRect((int)x,(int)y,this.img.getWidth(), this.img.getHeight());
 
+        g2d.setColor(Color.RED);
+        g2d.drawRect((int) x, (int) y, this.img.getWidth(null), this.img.getHeight(null));
+
+        // Draw the white background of the health bar
+        g.setColor(Color.WHITE);
+        g.fillRect((int) x, (int) (y - 20), 50, 8);
+
+        // Draw the green part representing the health
+        g.setColor(Color.GREEN);
+        g.fillRect((int) x, (int) (y - 20), 10 * health, 8);
+
+        //Drawing the green part representing lifes
+        g.setColor(Color.GREEN);
+        for (int i = 0; i < life; i++) {
+            g.fillOval(((int) x + this.img.getWidth(null) / 2 - (3 * 10 + 2 * 5) / 2) + (10 + 5) * i,
+                    (int) y + this.img.getHeight(null) + 5,
+                    10,
+                    10);
+        }
+        if (b != null) {
+            this.b.drawImage(g2d);
+        }
     }
+
+
 }

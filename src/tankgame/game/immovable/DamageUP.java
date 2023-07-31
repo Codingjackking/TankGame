@@ -1,18 +1,21 @@
-package tankgame.game;
+package tankgame.game.immovable;
+
+import tankgame.game.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Shield extends GameObject{
+public class DamageUP extends GameObject {
     float x,y;
     BufferedImage img;
-    public Shield(float x, float y, BufferedImage shield) {
+    public DamageUP(float x, float y, BufferedImage dmgup) {
         this.x = x;
         this.y = y;
-        this.img = shield;
+        this.img = dmgup;
     }
 
     public void drawImage(Graphics buffer) {
         buffer.drawImage(this.img, (int) x, (int) y, null);
     }
+
 }

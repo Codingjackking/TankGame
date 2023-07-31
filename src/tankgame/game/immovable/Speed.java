@@ -1,15 +1,17 @@
-package tankgame.game;
+package tankgame.game.immovable;
+
+import tankgame.game.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Health extends GameObject{
+public class Speed extends GameObject {
     float x,y;
     BufferedImage img;
-    public Health(float x, float y, BufferedImage health) {
+    public Speed(float x, float y, BufferedImage speed) {
         this.x = x;
         this.y = y;
-        this.img = health;
+        this.img = speed;
     }
 
     public void drawImage(Graphics buffer) {
