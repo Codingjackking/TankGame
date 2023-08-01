@@ -4,6 +4,7 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.Resources.ResourceManager;
+import tankgame.game.immovable.*;
 import tankgame.game.movable.Bullet;
 
 import javax.sound.sampled.*;
@@ -47,18 +48,30 @@ public class GameWorld extends JPanel implements Runnable {
                 this.tick++;
                 this.t1.update(); // update tank
                 this.t2.update();
-//                tickCount++;
+                this.checkCollisions();
                 this.repaint();   // redraw game
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our
                  * loop run at a fixed rate per/sec.
                 */
                 Thread.sleep(1000 / 144);
+
+                if (t1.getLife() == 0) {
+                    Thread.sleep(2000);
+                    music.stop();
+                    this.lf.setFrame("Player 2 Wins");
+                }
+                if (t2.getLife() == 0) {
+                    Thread.sleep(2000);
+                    music.stop();
+                    this.lf.setFrame("Player 1 Wins");
+                }
             }
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
         }
     }
+
 
     /**
      * Reset game to its initial state.
@@ -109,8 +122,182 @@ public class GameWorld extends JPanel implements Runnable {
         this.lf.getJf().addKeyListener(tc1);
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
-    }
 
+        this.gobjs.add(t1);
+        this.gobjs.add(t2);
+    }
+//    private void checkCollisions() {
+//        for (int i = 0; i < this.gobjs.size(); i++) {
+//            GameObject obj1 = this.gobjs.get(i);
+//            if (!obj1.isCollidable()) continue;
+//            if (obj1 instanceof Wall || obj1 instanceof BreakableWall) continue;
+//            for (int j = 0; j < this.gobjs.size(); j++) {
+//                if (i == j) continue;
+//                GameObject obj2 = this.gobjs.get(j);
+//                if (!obj2.isCollidable()) continue;
+//                if (obj1.getHitBox().getBounds().intersects(obj2.getHitBox().getBounds())) {
+//                    obj1.handleCollision(obj2);
+//                }
+//                if (obj1 instanceof Tank) {
+//                    final Tank t = (Tank) obj1;
+//                    for (Bullet b : t.getAmmo()) {
+//                        if (obj2.getHitBox().intersects(b.getHitBox())) {
+//                            b.handleCollision(obj2);
+//                            if (obj2 instanceof BreakableWall) {
+//                                ((BreakableWall) obj2).hitWall();
+//                                if (((BreakableWall) obj2).getHealth() == 0) {
+//                                    removeGameObject(obj2);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                if (obj2 instanceof Tank) {
+//                    final Tank t = (Tank) obj2;
+//                    for (Bullet b : t.getAmmo()) {
+//                        if (obj2.getHitBox().intersects(b.getHitBox())) {
+//                            b.handleCollision(obj1);
+//                            if (obj1 instanceof BreakableWall) {
+//                                ((BreakableWall) obj1).hitWall();
+//                                if (((BreakableWall) obj1).getHealth() == 0) {
+//                                    removeGameObject(obj1);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+private void checkCollisions() {
+    for (int i = 0; i < this.gobjs.size(); i++) {
+        GameObject obj1 = this.gobjs.get(i);
+        if (!obj1.isCollidable()) continue;
+
+        // Handle power-up interactions with tanks
+        if (obj1 instanceof Tank) {
+            Tank tank = (Tank) obj1;
+
+            for (int j = 0; j < this.gobjs.size(); j++) {
+                GameObject obj2 = this.gobjs.get(j);
+                if (!obj2.isCollidable()) continue;
+
+                // Check for collision with Health power-up
+                if (obj2 instanceof Health && obj1.getHitBox().intersects(obj2.getHitBox())) {
+                    tank.addHealth();
+                    removeGameObject(obj2);
+                }
+
+                // Check for collision with Shield power-up
+                else if (obj2 instanceof Shield && obj1.getHitBox().intersects(obj2.getHitBox())) {
+                    tank.addShield();
+                    removeGameObject(obj2);
+                }
+
+                // Check for collision with Lives power-up
+                else if (obj2 instanceof Lives && obj1.getHitBox().intersects(obj2.getHitBox())) {
+                    tank.addLife();
+                    removeGameObject(obj2);
+                }
+
+                // Check for collision with Speed power-up
+                else if (obj2 instanceof Speed && obj1.getHitBox().intersects(obj2.getHitBox())) {
+                    tank.addSpeedBoost();
+                    removeGameObject(obj2);
+                }
+            }
+        }
+
+        for (int j = 0; j < this.gobjs.size(); j++) {
+            if (i == j) continue;
+            GameObject obj2 = this.gobjs.get(j);
+            if (!obj2.isCollidable()) continue;
+            if (obj1.getHitBox().getBounds().intersects(obj2.getHitBox().getBounds())) {
+                obj1.handleCollision(obj2);
+            }
+            if (obj1 instanceof Tank) {
+                final Tank t = (Tank) obj1;
+                for (Bullet b : t.getAmmo()) {
+                    if (obj2.getHitBox().intersects(b.getHitBox())) {
+                        b.handleCollision(obj2);
+                        if (obj2 instanceof BreakableWall) {
+                            ((BreakableWall) obj2).hitWall();
+                            if (((BreakableWall) obj2).getHealth() == 0) {
+                                removeGameObject(obj2);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (obj2 instanceof Tank) {
+                final Tank t = (Tank) obj2;
+                for (Bullet b : t.getAmmo()) {
+                    if (obj2.getHitBox().intersects(b.getHitBox())) {
+                        b.handleCollision(obj1);
+                        if (obj1 instanceof BreakableWall) {
+                            ((BreakableWall) obj1).hitWall();
+                            if (((BreakableWall) obj1).getHealth() == 0) {
+                                removeGameObject(obj1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    //    private void checkCollisions() {
+//        for (int i = 0; i < this.gobjs.size(); i++) {
+//            GameObject obj1 = this.gobjs.get(i);
+//            if (!obj1.isCollidable()) continue;
+//            if (obj1 instanceof Wall ||
+//                    obj1 instanceof BreakableWall ||
+//                    obj1 instanceof Health ||
+//                    obj1 instanceof Shield ||
+//                    obj1 instanceof Speed ||
+//                    obj1 instanceof DamageUP ||
+//                    obj1 instanceof Lives) continue;
+//            for (int j = 0; j < this.gobjs.size(); j++) {
+//                if (i == j) continue;
+//                GameObject obj2 = this.gobjs.get(j);
+//                if (!obj2.isCollidable()) continue;
+//                if (obj1.getHitBox().getBounds().intersects(obj2.getHitBox().getBounds())) {
+//                    obj1.handleCollision(obj2);
+////                    if (obj1 instanceof Tank && obj2 instanceof Health) {
+//                }
+//                if (obj1 instanceof Tank) {
+//                    final Tank t = (Tank) obj1;
+//                    for (Bullet b : t.getAmmo()) {
+//                        if (obj2.getHitBox().intersects(b.getHitBox())) {
+//                            b.handleCollision(obj2);
+//                            if (obj2 instanceof BreakableWall) {
+//                                ((BreakableWall) obj2).hitWall();
+//                                if (((BreakableWall) obj2).getHealth() == 0) {
+//                                    removeGameObject(obj2);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                if (obj2 instanceof Tank) {
+//                    final Tank t = (Tank) obj2;
+//                    for (Bullet b : t.getAmmo()) {
+//                        if (obj2.getHitBox().intersects(b.getHitBox())) {
+//                            b.handleCollision(obj1);
+//                            if (obj1 instanceof BreakableWall) {
+//                                ((BreakableWall) obj1).hitWall();
+//                                if (((BreakableWall) obj1).getHealth() == 0) {
+//                                    removeGameObject(obj1);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     private void drawFloor(Graphics2D buffer) {
         BufferedImage floor = ResourceManager.getSprite("bg");
         for (int i = 0; i < GameConstants.GAME_WORLD_WIDTH; i +=320) {
@@ -143,6 +330,14 @@ public class GameWorld extends JPanel implements Runnable {
         g2.drawImage(miniMap, (int) ((double)GameConstants.GAME_SCREEN_WIDTH / .24 - miniMap.getWidth() / 2), (int) ((double)GameConstants.GAME_SCREEN_HEIGHT / .24 - miniMap.getWidth() / 2),null);
     }
 
+    public void addGameObject(GameObject obj) {
+        this.gobjs.add(obj);
+    }
+
+    public void removeGameObject(GameObject obj) {
+        this.gobjs.remove(obj);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -154,5 +349,4 @@ public class GameWorld extends JPanel implements Runnable {
         renderSplitScreens(g2, world);
         renderMiniMap(g2, world);
     }
-
 }

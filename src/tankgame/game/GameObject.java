@@ -6,7 +6,7 @@ import tankgame.game.immovable.*;
 import java.awt.*;
 
 
-public abstract class GameObject {
+public abstract class GameObject implements Collidable, Drawable {
     public static GameObject newInstance(String type, float x, float y) throws UnsupportedOperationException {
         return switch (type) {
             case "9", "2" -> new Wall(x, y, ResourceManager.getSprite("unbreak"));
@@ -16,9 +16,14 @@ public abstract class GameObject {
             case "6" -> new Speed(x, y, ResourceManager.getSprite("speed"));
             case "7" -> new DamageUP(x, y, ResourceManager.getSprite("dmgup"));
             case "8" -> new Lives(x, y, ResourceManager.getSprite("lives"));
+            case "11" -> new Lives(x, y, ResourceManager.getSprite("tank1"));
+            case "22" -> new Lives(x, y, ResourceManager.getSprite("tank2"));
+
             default -> throw new UnsupportedOperationException();
         };
     }
 
     public abstract void drawImage(Graphics g);
+
+    public abstract Rectangle getHitBox();
 }
