@@ -3,16 +3,10 @@ package tankgame.game;
 import java.awt.*;
 
 public interface Collidable {
-    default boolean isCollidable() {
-        if (this instanceof Collidable) {
-            return true;
-        }
-        return false;
-    }
-
+    boolean isCollidable();
+    void destroy();
+    void collide(Collidable obj);
     Rectangle getHitBox();
 
-    default void handleCollision(Collidable obj) {
-    }
-
+    boolean checkCollision(Collidable with);
 }

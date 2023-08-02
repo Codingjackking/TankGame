@@ -3,6 +3,8 @@ package tankgame;
 import tankgame.Resources.ResourceManager;
 import tankgame.game.GameWorld;
 import tankgame.menus.EndGamePanel;
+import tankgame.menus.Tank1WinsPanel;
+import tankgame.menus.Tank2WinsPanel;
 import tankgame.menus.StartMenuPanel;
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +37,8 @@ public class Launcher {
      * used for our game. It will be attached to the main panel.
      */
     private CardLayout cl;
+    private JPanel tank1Wins;
+    private JPanel tank2Wins;
 
     public Launcher(){
         this.jf = new JFrame();             // creating a new JFrame object
@@ -57,13 +61,17 @@ public class Launcher {
          * two buttons restart and exit.
          */
         JPanel endPanel = new EndGamePanel(this); // create a new end game pane;
+        this.tank1Wins= new Tank1WinsPanel(this);
+        this.tank2Wins = new Tank2WinsPanel(this);
         cl = new CardLayout(); // creating a new CardLayout Panel
         this.mainPanel.setLayout(cl); // set the layout of the main panel to our card layout
         this.mainPanel.add(startPanel, "start"); //add the start panel to the main panel
         this.mainPanel.add(gamePanel, "game");   //add the game panel to the main panel
         this.mainPanel.add(endPanel, "end");    // add the end game panel to the main panel
-        this.jf.add(mainPanel); // add the main panel to the JFrame
+        this.mainPanel.add(tank1Wins, "Tank1Wins"); //add the tank1wins panel to the main panel
+        this.mainPanel.add(tank2Wins, "Tank2Wins");   //add the tank2wins panel to the main panel
         this.jf.setResizable(false); //make the JFrame not resizable
+        this.jf.add(mainPanel); // add the main panel to the JFrame
         this.setFrame("start"); // set the current panel to start panel
     }
 
@@ -83,7 +91,15 @@ public class Launcher {
             case "end" ->
                 // set the size of the jFrame to the expected size for the end panel
                     this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH, GameConstants.END_MENU_SCREEN_HEIGHT);
+            case "Tank1Wins" ->
+                // set the size of the jFrame to the expected size for the end panel
+                this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH,GameConstants.END_MENU_SCREEN_HEIGHT);
+
+            case "Tank2Wins" ->
+                // set the size of the jFrame to the expected size for the end panel
+                this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH,GameConstants.END_MENU_SCREEN_HEIGHT);
         }
+
         this.cl.show(mainPanel, type); // change current panel shown on main panel tp the panel denoted by type.
         this.jf.setVisible(true); // show the JFrame
     }

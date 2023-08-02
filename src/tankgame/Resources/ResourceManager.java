@@ -74,6 +74,7 @@ private static BufferedImage loadSprites(String path) throws IOException {
             ResourceManager.sprites.put("lives", loadSprites("powerups/lives.png"));
             ResourceManager.sprites.put("bg", loadSprites("floor/bg.bmp"));
             ResourceManager.sprites.put("menu", loadSprites("menu/title.png"));
+            ResourceManager.sprites.put("empty",loadSprites("images/empty.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

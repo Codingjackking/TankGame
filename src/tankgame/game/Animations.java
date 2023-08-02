@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class Animations implements Drawable {
+public class Animations {
     private float x,y;
     private List<BufferedImage> frames;
     private long timeSinceUpdate = 0;
@@ -38,8 +38,4 @@ public class Animations implements Drawable {
         }
     }
 
-    @Override
-    public boolean isDrawable() {
-        return false;
-    }
 }

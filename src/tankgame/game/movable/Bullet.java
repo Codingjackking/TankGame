@@ -3,45 +3,45 @@ package tankgame.game.movable;
 import tankgame.GameConstants;
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
-import tankgame.game.Tank;
-import tankgame.game.immovable.BreakableWall;
-import tankgame.game.immovable.Wall;
+import tankgame.game.MapLoader;
+import tankgame.game.immovable.Walls.BreakableWall;
+import tankgame.game.immovable.Walls.Wall;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
 
-public class Bullet extends GameObject implements Collidable {
+public class Bullet extends MovableObjects implements Collidable {
     private Rectangle hitBox;
     private float x;
     private float y;
     private float vx;
     private float vy;
     private float angle;
-    private Tank myTank;
+    private Tank tank;
+    private boolean isCollidable;
     private Bullet b;
     private final float R = 3;
     private  BufferedImage img;
     private boolean isActive = true;
     private boolean hidden = true;
+    private int damage;
 
-    public Bullet(float x, float y, float angle, BufferedImage img, Tank myTank) {
+    public Bullet(MapLoader ml, Tank tank, float x, float y, float angle, BufferedImage img) {
+        super(ml, x,y,angle,img);
         this.x = x;
         this.y = y;
-        this.vx = 0;
-        this.vy = 0;
         this.img = img;
         this.angle = angle;
         this.hitBox = new Rectangle((int) x, (int) y,this.img.getWidth(), this.img.getHeight());
-        this.myTank = myTank;
+        this.isCollidable = true;
+        this.tank = tank;
     }
     public void update() {
-        moveForwards();
-    }
-
-    public void hidden() {
-        hidden = false;
+        this.moveForwards();
+        this.checkBorder();
+        this.moveBound();
+        this.runCollisions();
     }
 
     public void moveForwards() {
@@ -50,7 +50,7 @@ public class Bullet extends GameObject implements Collidable {
         x += vx;
         y += vy;
         checkBorder();
-        moveBound();
+//        moveBound();
     }
 
     private void moveBound() {
@@ -61,63 +61,91 @@ public class Bullet extends GameObject implements Collidable {
     public void checkBorder() {
         if (x < 30) {
             x = 30;
-            isActive = false;
+            this.destroy();
         }
         if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
             x = GameConstants.GAME_WORLD_WIDTH - 88;
-            isActive = false;
+            this.destroy();
         }
         if (y < 30) {
             y = 30;
-            isActive = false;
+            this.destroy();
         }
         if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
             y = GameConstants.GAME_WORLD_HEIGHT - 80;
-            isActive = false;
+            this.destroy();
+        }
+    }
+
+//    public boolean myTankCheck(Tank check) {
+//        if (this.myTank.equals(check)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
+    private void runCollisions() {
+        for(GameObject obj : this.ml.getGameObjects()) {
+            if(!obj.equals(this) && obj instanceof Collidable && this.checkCollision((Collidable) obj)) {
+                collide((Collidable) obj);
+            }
         }
     }
 
     public boolean myTankCheck(Tank check) {
-        if (this.myTank.equals(check)) {
+        if(this.tank.equals(check)) {
             return true;
-        } else {
+        }
+        else {
             return false;
+        }
+    }
+    @Override
+    public boolean isCollidable() {
+        return isCollidable;
+    }
+
+    @Override
+    public void destroy() {
+        this.destroyed = true;
+        tank.removeBullet(this);
+    }
+
+    @Override
+    public void collide(Collidable obj) {
+        if (obj instanceof Tank) {
+            if (!myTankCheck((Tank) obj)) {
+                ((Tank) obj).hitTank();
+                this.destroy();
+            }
+        } else if (obj instanceof Wall) {
+            this.destroy();
+        } else if (obj instanceof BreakableWall && obj.isCollidable()) {
+            ((BreakableWall) obj).hitWall();
+            this.destroy();
         }
     }
     public Rectangle getHitBox() {
         return hitBox.getBounds();
     }
+
     @Override
-    public void handleCollision(Collidable obj) {
-        if (isActive) {
-            if (obj instanceof Tank) {
-                if (!myTankCheck((Tank) obj)) {
-                    ((Tank) obj).hitTank();
-                    isActive = false;
-                }
-            } else if (obj instanceof BreakableWall) {
-                ((BreakableWall) obj).hitWall();
-                isActive = false;
-            } else if (obj instanceof Wall) {
-                isActive = false;
-            }
-        }
+    public boolean checkCollision(Collidable with) {
+        return this.getHitBox().intersects(with.getHitBox());
     }
+
     @Override
     public void drawImage(Graphics g) {
-        if ((isDrawable() && hidden == false)) {
             AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
             rotation.rotate(Math.toRadians(angle), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
             Graphics2D g2d = (Graphics2D) g;
             g2d.drawImage(this.img, rotation, null);
-            if (b != null) {
-                this.b.drawImage(g);
-            }
-        }
     }
 
     @Override
-    public boolean isDrawable() {
-        return isActive;
+    public void reset() {
+
     }
+
 }
