@@ -45,8 +45,6 @@ public class Tank extends MovableObjects implements Collidable {
     private boolean ShootPressed;
     private final List<Bullet> ammo;
     private Bullet b;
-    private GameWorld gw;
-
     private long timeSinceLastShot = 0L;
     private long cooldown = 2000;
 
@@ -73,7 +71,6 @@ public class Tank extends MovableObjects implements Collidable {
         this.img = img;
         this.ml = ml;
         this.angle = angle;
-//        this.gw = gw;
         this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
         this.ammo = new ArrayList<>();
     }
@@ -199,12 +196,13 @@ public class Tank extends MovableObjects implements Collidable {
     // Method to fire the bullet
     private void fireBullet() {
         int startX = (int) ((this.x + 13) + (37 * (int) Math.round(Math.cos(Math.toRadians(angle)))));
-        int startY = (int) ((this.y + 12) + (37 * (int) Math.round(Math.sin(Math.toRadians(angle)))));
+        int startY = (int) ((this.y + 9) + (37 * (int) Math.round(Math.sin(Math.toRadians(angle)))));
 //        Bullet b = new Bullet(ml, this, x+img.getWidth(), y+ (float) img.getHeight() /2-12,angle,ResourceManager.getSprite("bullet"));
         Bullet b = new Bullet(ml, this, startX, startY, angle, ResourceManager.getSprite("bullet"));
         this.ammo.add(b);
         ml.addGameObject(b);
-        ml.anims.add(new Animations(x,y,ResourceManager.getAnimation("bulletshoot")));
+        ml.anims.add(new Animations(startX,startY,ResourceManager.getAnimation("bulletshoot")));
+        ResourceManager.getSound("shotfire").playSound();
     }
 
     public void hitTank() {
@@ -255,8 +253,8 @@ public class Tank extends MovableObjects implements Collidable {
 
     // Method to add a temporary speed boost when the tank collides with the speed power-up
     public void addSpeedBoost() {
-        speedBoostDuration = 500; // Set the duration of the speed boost in milliseconds (adjust as needed)
-        R = 5; // Set the speed of the tank during the speed boost (adjust as needed)
+        speedBoostDuration = 1000; // Set the duration of the speed boost in milliseconds (adjust as needed)
+        R = 3; // Set the speed of the tank during the speed boost (adjust as needed)
     }
     public void removeBullet(Bullet bullet) {
         ammo.remove(bullet);
@@ -316,6 +314,7 @@ public class Tank extends MovableObjects implements Collidable {
             if (obj instanceof PowerUp) {
                 ((PowerUp) obj).apply(this);
                 ml.anims.add(new Animations(x,y,ResourceManager.getAnimation("powerpick")));
+                ResourceManager.getSound("pickup").playSound();
                 obj.destroy();
             }
         }

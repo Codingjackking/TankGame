@@ -42,6 +42,7 @@ public class GameWorld extends JPanel implements Runnable {
     public void run() {
         try {
             this.resetGame();
+            ResourceManager.getSound("bg").playSound();
             while (true) {
                 this.tick++;
                 ml.updateMap();
@@ -56,13 +57,13 @@ public class GameWorld extends JPanel implements Runnable {
 
                 if (t1.getLife() == 0) {
                     Thread.sleep(2000);
-//                    music.stop();
+                    ResourceManager.getSound("bg").stop();
                     this.lf.setFrame("Tank2Wins");
                     return;
                 }
                 if (t2.getLife() == 0) {
                     Thread.sleep(2000);
-//                    music.stop();
+                    ResourceManager.getSound("bg").stop();
                     this.lf.setFrame("Tank1Wins");
                     return;
                 }
@@ -78,15 +79,6 @@ public class GameWorld extends JPanel implements Runnable {
      */
     public void resetGame() {
         this.tick = 0;
-//        try {
-////            AudioInputStream music1 = AudioSystem.getAudioInputStream((InputStream) ResourceManager.getSound("music1"));
-////            music = AudioSystem.getClip();
-////            music.open(music1);
-////            music.start();
-////            music.loop(5);
-//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//            throw new RuntimeException(e);
-//        }
         ml.resetMap();
         this.resetTanks();
     }

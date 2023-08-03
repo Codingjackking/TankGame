@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ResourceManager {
     private final static Map<String, BufferedImage> sprites = new HashMap<>();
-    private final static Map<String ,Sound> sound = new HashMap<>();
+    private final static Map<String ,Sound> sounds = new HashMap<>();
     private final static Map<String, List<BufferedImage>> animations = new HashMap<>();
     private static final Map<String, Integer> animationInfo = new HashMap<>() {{
         put("bullethit", 24);
@@ -20,8 +20,6 @@ public class ResourceManager {
         put("rocketflame",16);
         put("rockethit",32);
     }};
-    private final static Map<String, Clip> sounds = new HashMap<>();
-
     private static BufferedImage loadSprites(String path) throws IOException {
 //        System.out.println("path = " + path);
         return ImageIO.read(
@@ -42,7 +40,7 @@ private static BufferedImage loadSprites(String path) throws IOException {
 }
 */
 
-    private static Clip loadSounds(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    private static Sound loadSounds(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         AudioInputStream ais = AudioSystem.getAudioInputStream(
                 Objects.requireNonNull(ResourceManager
                         .class
@@ -51,8 +49,8 @@ private static BufferedImage loadSprites(String path) throws IOException {
         Clip c = AudioSystem.getClip();
         c.open(ais);
         Sound s = new Sound(c);
-        s.setVolume(-1f);
-        return (Clip) s;
+        s.setVolume(.2f);
+        return s;
     }
 
     private static void initSprites() {
@@ -97,11 +95,11 @@ private static BufferedImage loadSprites(String path) throws IOException {
 
     private static void initSounds() {
         try {
-            ResourceManager.sounds.put("music1", (Clip) loadSounds("sounds/music.wav"));
-            ResourceManager.sounds.put("pickup", (Clip) loadSounds("sounds/pickup.wav"));
-            ResourceManager.sounds.put("shot", (Clip) loadSounds("sounds/bullet.wav"));
-            ResourceManager.sounds.put("shotfire", (Clip) loadSounds("sounds/shotfiring.wav"));
-            ResourceManager.sounds.put("shotboom", (Clip) loadSounds("sounds/shotexplosion.wav"));
+            ResourceManager.sounds.put("bg", loadSounds("sounds/Music.mid"));
+            ResourceManager.sounds.put("pickup", loadSounds("sounds/pickup.wav"));
+            ResourceManager.sounds.put("shot", loadSounds("sounds/bullet.wav"));
+            ResourceManager.sounds.put("shotfire",loadSounds("sounds/shotfiring.wav"));
+            ResourceManager.sounds.put("shotboom",loadSounds("sounds/shotexplosion.wav"));
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             throw new RuntimeException(e);
@@ -125,7 +123,7 @@ private static BufferedImage loadSprites(String path) throws IOException {
         }
         return ResourceManager.animations.get(type);
     }
-    public static Clip getSound(String type) {
+    public static Sound getSound(String type) {
         if (!ResourceManager.sounds.containsKey(type)) {
             throw new RuntimeException("%s is missing from sound resources".formatted(type));
         }

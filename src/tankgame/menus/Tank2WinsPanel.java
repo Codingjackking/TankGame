@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Tank2WinsPanel extends JPanel {
 
@@ -18,7 +19,7 @@ public class Tank2WinsPanel extends JPanel {
     public Tank2WinsPanel(Launcher lf) {                        // lf is a launcher
         this.lf = lf;
         try {
-            menuBackground = ImageIO.read(this.getClass().getClassLoader().getResource("menu/Tank2Wins.png"));       // starts the game
+            menuBackground = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource("menu/Tank2Wins.png")));       // starts the game
         } catch (IOException e) {
             System.out.println("Error cant read menu background");
             e.printStackTrace();
