@@ -2,6 +2,8 @@ package tankgame.game.immovable.Walls;
 
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
+import tankgame.game.GameObject;
+import tankgame.game.MapLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,6 +14,7 @@ public class BreakableWall extends Wall implements Collidable {
     private Rectangle hitBox;
     private boolean isCollidable;
     private int health = 2;
+    private int damage = 1;
 
     public BreakableWall(float x, float y, BufferedImage img) {
         super(x, y, img);
@@ -23,7 +26,7 @@ public class BreakableWall extends Wall implements Collidable {
     }
 
     @Override
-    public void update() {
+    public void update(MapLoader ml) {
         if (this.health <= 0) {
             this.destroy();
         }
@@ -54,22 +57,22 @@ public class BreakableWall extends Wall implements Collidable {
 
     public void hitWall() {
         if (this.health > 1) {
-            this.health -=1;
+            removeHealth(damage);
         } else {
             setHealth(0);
             this.img = ResourceManager.getSprite("break2");
         }
     }
-//    public void removeHealth () {
-//        if(this.health > 0) {
-//            this.health -= 1;
-//        }
-//        if(this.health <= 0) {
-//            this.img = ResourceManager.getSprite("empty");
-//        } else if (this.health <= 5) {
-//            this.img = ResourceManager.getSprite("break1");
-//        }
-//    }
+    public void removeHealth (int damage) {
+        if(this.health > 0) {
+            this.health -= damage;
+        }
+        if(this.health <= 0) {
+            this.img = ResourceManager.getSprite("empty");
+        } else if (this.health <= 5) {
+            this.img = ResourceManager.getSprite("break1");
+        }
+    }
     public void setHealth(int health) {
         this.health = health;
     }
@@ -82,9 +85,13 @@ public class BreakableWall extends Wall implements Collidable {
 
     @Override
     public void reset() {
-        this.img = ResourceManager.getSprite("break2");
+        this.img = ResourceManager.getSprite("break1");
         health = 2;
         this.isCollidable = true;
         this.destroyed = false;
+    }
+
+    public int getHealth() {
+        return this.health;
     }
 }

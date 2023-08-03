@@ -3,6 +3,7 @@ package tankgame.game.immovable.PowerUps;
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
+import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
 
 import java.awt.*;
@@ -28,7 +29,7 @@ public class  DamageUP extends PowerUp {
     }
 
     @Override
-    public void update() {
+    public void update(MapLoader ml) {
 
     }
 
@@ -39,9 +40,9 @@ public class  DamageUP extends PowerUp {
 
     }
 
-    public void respawn() {
-        respawnTime = System.currentTimeMillis() + respawnDelay;
-    }
+//    public void respawn() {
+//        respawnTime = System.currentTimeMillis() + respawnDelay;
+//    }
 
     @Override
     public boolean isCollidable() {

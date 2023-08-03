@@ -14,21 +14,21 @@ public class Animations {
     private boolean isRunning = false;
 
     public Animations(float x, float y, List<BufferedImage> frames) {
-        this.x = x;
-        this.y = y;
+        this.x = x - frames.get(0).getWidth()/2f;
+        this.y = y - frames.get(0).getHeight()/2f;
         this.frames = frames;
         isRunning = true;
-
+        currentFrame = 0;
     }
 
     public void update() {
         if (timeSinceUpdate + delay < System.currentTimeMillis()) {
             this.timeSinceUpdate = System.currentTimeMillis();
             this.currentFrame++;
-            this.currentFrame = (currentFrame + 1) % this.frames.size();
-//            if (this.currentFrame == this.frames.size()) {
-//                isRunning = false;
-//            }
+//            this.currentFrame = (currentFrame + 1) % this.frames.size();
+            if (this.currentFrame == this.frames.size()) {
+                isRunning = false;
+            }
         }
     }
 

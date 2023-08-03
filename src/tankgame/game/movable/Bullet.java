@@ -1,6 +1,8 @@
 package tankgame.game.movable;
 
 import tankgame.GameConstants;
+import tankgame.Resources.ResourceManager;
+import tankgame.game.Animations;
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
@@ -37,7 +39,7 @@ public class Bullet extends MovableObjects implements Collidable {
         this.isCollidable = true;
         this.tank = tank;
     }
-    public void update() {
+    public void update(MapLoader ml) {
         this.moveForwards();
         this.checkBorder();
         this.moveBound();
@@ -49,8 +51,8 @@ public class Bullet extends MovableObjects implements Collidable {
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
         y += vy;
-        checkBorder();
-//        moveBound();
+//        checkBorder();
+        moveBound();
     }
 
     private void moveBound() {
@@ -117,15 +119,22 @@ public class Bullet extends MovableObjects implements Collidable {
         if (obj instanceof Tank) {
             if (!myTankCheck((Tank) obj)) {
                 ((Tank) obj).hitTank();
+                ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
                 this.destroy();
             }
-        } else if (obj instanceof Wall) {
+        } else if (obj instanceof Wall && obj.isCollidable()) {
+            ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
             this.destroy();
-        } else if (obj instanceof BreakableWall && obj.isCollidable()) {
-            ((BreakableWall) obj).hitWall();
-            this.destroy();
+            if (obj instanceof BreakableWall) {
+                ((BreakableWall) obj).hitWall();
+                if (((BreakableWall) obj).getHealth() == 0) {
+//                ml.removeGameObject((GameObject) obj);
+                    this.destroy();
+                }
+            }
         }
     }
+
     public Rectangle getHitBox() {
         return hitBox.getBounds();
     }

@@ -3,6 +3,7 @@ package tankgame.game.immovable.PowerUps;
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
+import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class Health extends PowerUp {
     }
 
     @Override
-    public void update() {
+    public void update(MapLoader ml) {
 
     }
 

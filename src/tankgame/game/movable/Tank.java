@@ -3,15 +3,9 @@ package tankgame.game.movable;
 import tankgame.GameConstants;
 import tankgame.Resources.ResourceManager;
 
-import tankgame.game.Collidable;
-import tankgame.game.GameObject;
-import tankgame.game.GameWorld;
-import tankgame.game.MapLoader;
+import tankgame.game.*;
 import tankgame.game.immovable.PowerUps.PowerUp;
-import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.Wall;
-import tankgame.game.movable.Bullet;
-import tankgame.game.movable.MovableObjects;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -51,6 +45,7 @@ public class Tank extends MovableObjects implements Collidable {
     private boolean ShootPressed;
     private final List<Bullet> ammo;
     private Bullet b;
+    private GameWorld gw;
 
     private long timeSinceLastShot = 0L;
     private long cooldown = 2000;
@@ -78,6 +73,7 @@ public class Tank extends MovableObjects implements Collidable {
         this.img = img;
         this.ml = ml;
         this.angle = angle;
+//        this.gw = gw;
         this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
         this.ammo = new ArrayList<>();
     }
@@ -128,7 +124,7 @@ public class Tank extends MovableObjects implements Collidable {
     }
 
     @Override
-    public void update() {
+    public void update(MapLoader ml) {
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -144,9 +140,9 @@ public class Tank extends MovableObjects implements Collidable {
         if (this.RightPressed) {
             this.rotateRight();
         }
-        if (this.ShootPressed) {
-//        if (this.ShootPressed  && (this.timeSinceLastShot + this.cooldown) < System.currentTimeMillis()) {
-//            this.timeSinceLastShot = System.currentTimeMillis();
+//        if (this.ShootPressed) {
+        if (this.ShootPressed  && (this.timeSinceLastShot + this.cooldown) < System.currentTimeMillis()) {
+            this.timeSinceLastShot = System.currentTimeMillis();
             this.fireBullet();
         }
         this.checkBorder();
@@ -191,19 +187,29 @@ public class Tank extends MovableObjects implements Collidable {
         this.health = 5;
     }
 
+    private int safeShootX() {
+        double cx = 31 * Math.cos(Math.toRadians(this.angle));
+        return (int) (x + this.img.getWidth() / 2f + cx - 4f);
+    }
+
+    private int safeShootY() {
+        double cy = 31 * Math.cos(Math.toRadians(this.angle));
+        return (int) (y + this.img.getWidth() / 2f + cy - 4f);
+    }
     // Method to fire the bullet
     private void fireBullet() {
         int startX = (int) ((this.x + 13) + (37 * (int) Math.round(Math.cos(Math.toRadians(angle)))));
         int startY = (int) ((this.y + 12) + (37 * (int) Math.round(Math.sin(Math.toRadians(angle)))));
 //        Bullet b = new Bullet(ml, this, x+img.getWidth(), y+ (float) img.getHeight() /2-12,angle,ResourceManager.getSprite("bullet"));
         Bullet b = new Bullet(ml, this, startX, startY, angle, ResourceManager.getSprite("bullet"));
-        ml.addGameObject(b);
         this.ammo.add(b);
+        ml.addGameObject(b);
+        ml.anims.add(new Animations(x,y,ResourceManager.getAnimation("bulletshoot")));
     }
 
     public void hitTank() {
         if (this.health > 1) {
-            removeHealth(damage);
+            this.removeHealth(damage);
         } else if (this.life > 1) {
             setX(originalX);
             setY(originalY);
@@ -254,6 +260,7 @@ public class Tank extends MovableObjects implements Collidable {
     }
     public void removeBullet(Bullet bullet) {
         ammo.remove(bullet);
+//        ml.removeGameObject(bullet);
     }
 
     private void runCollisions() {
@@ -303,11 +310,12 @@ public class Tank extends MovableObjects implements Collidable {
                 this.bump();
             }
 //            if (obj instanceof BreakableWall && obj.isCollidable()) {
-//                ((BreakableWall) obj).removeHealth(damage);
+//                ((BreakableWall) obj).hitWall();
 //                this.destroy();
 //            }
             if (obj instanceof PowerUp) {
                 ((PowerUp) obj).apply(this);
+                ml.anims.add(new Animations(x,y,ResourceManager.getAnimation("powerpick")));
                 obj.destroy();
             }
         }
@@ -394,7 +402,6 @@ public class Tank extends MovableObjects implements Collidable {
 
     @Override
     public void drawImage(Graphics g) {
-//        if (isDrawable()) {
             AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
             rotation.rotate(Math.toRadians(angle), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
             Graphics2D g2d = (Graphics2D) g;
@@ -403,14 +410,14 @@ public class Tank extends MovableObjects implements Collidable {
             g2d.setColor(Color.RED);
             g2d.drawRect((int) x, (int) y, this.img.getWidth(null), this.img.getHeight(null));
 //            this.ammo.forEach(b -> b.drawImage(g2d));
-//            g2d.setColor(Color.GREEN);
-//            g2d.drawRect((int) x, (int) y - 20, 100, 15);
-//            //Shooting Cooldown Timer;
-//            long currentWidth = 100 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
-//            if (currentWidth > 100) {
-//                currentWidth = 100;
-//            }
-//            g2d.fillRect((int) x, (int) y - 20, (int) currentWidth, 15);
+            g2d.setColor(Color.BLUE);
+            g2d.drawRect((int) x, (int) y - 12, 10*health, 8);
+            //Shooting Cooldown Timer;
+            long currentWidth = 20 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
+            if (currentWidth > 50) {
+                currentWidth = 50;
+            }
+            g2d.fillRect((int) x, (int) y - 12, (int) currentWidth, 8);
 
 
         // Draw the white background of the health bar

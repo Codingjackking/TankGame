@@ -12,6 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author anthony-pc
  */
@@ -25,6 +28,7 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
     static long tickCount = 0;
+//    List<Animations> anims = new ArrayList<Animations>();
 
     /**
      *
@@ -37,11 +41,13 @@ public class GameWorld extends JPanel implements Runnable {
     @Override
     public void run() {
         try {
-//            this.resetGame();
+            this.resetGame();
             while (true) {
                 this.tick++;
                 ml.updateMap();
+                ml.clearDeadObjects();
                 this.repaint();   // redraw game
+                this.ml.anims.forEach(Animations::update);
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our
                  * loop run at a fixed rate per/sec.
@@ -51,13 +57,13 @@ public class GameWorld extends JPanel implements Runnable {
                 if (t1.getLife() == 0) {
                     Thread.sleep(2000);
 //                    music.stop();
-                    this.lf.setFrame("Tank 2 Wins");
+                    this.lf.setFrame("Tank2Wins");
                     return;
                 }
                 if (t2.getLife() == 0) {
                     Thread.sleep(2000);
 //                    music.stop();
-                    this.lf.setFrame("Tank 1 Wins");
+                    this.lf.setFrame("Tank1Wins");
                     return;
                 }
             }
@@ -82,6 +88,7 @@ public class GameWorld extends JPanel implements Runnable {
 //            throw new RuntimeException(e);
 //        }
         ml.resetMap();
+        this.resetTanks();
     }
 
     /**
@@ -105,6 +112,11 @@ public class GameWorld extends JPanel implements Runnable {
 
     }
 
+    private void resetTanks() {
+        t1.reset(GameConstants.TANK1_START_X, GameConstants.TANK1_START_Y, GameConstants.TANK1_START_ANGLE);
+        t2.reset(GameConstants.TANK2_START_X, GameConstants.TANK2_START_Y, GameConstants.TANK2_START_ANGLE);
+
+    }
     private BufferedImage checkDimension(Tank tank) {
         BufferedImage checked;
         int x, y;
@@ -137,6 +149,7 @@ public class GameWorld extends JPanel implements Runnable {
         buffer.fillRect(0,0, GameConstants.GAME_WORLD_WIDTH, GameConstants.GAME_WORLD_HEIGHT);
         ml.drawFloors(buffer);
         ml.drawGameObjects(buffer);
+        ml.anims.forEach(animations -> animations.drawImage(buffer));
         renderSplitScreens(g2, world);
         renderMiniMap(g2, world);
     }

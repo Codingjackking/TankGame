@@ -54,7 +54,7 @@ public abstract class GameObject {
         return destroyed;
     }
 
-    public abstract void update();
+    public abstract void update(MapLoader ml);
     public abstract void drawImage(Graphics g);
 
     public abstract void reset();

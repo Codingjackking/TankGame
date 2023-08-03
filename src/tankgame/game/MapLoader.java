@@ -20,28 +20,30 @@ import java.util.Objects;
 
 public class MapLoader {
     private List<GameObject> gobjs;
+    private GameWorld gw;
+    public List<Animations> anims = new ArrayList<Animations>();
     public List<GameObject> getGameObjects() {
         return gobjs;
     }
 
-    public void addGameObject(GameObject go) {
-        this.gobjs.add(go);
+    public void addGameObject(GameObject obj) {
+        this.gobjs.add(obj);
     }
-
+    public void removeGameObject(GameObject obj) {
+        this.gobjs.remove(obj);
+    }
 
     void resetMap() {
         gobjs.forEach(GameObject::reset);
     }
 
+    void clearDeadObjects() {
+        this.gobjs.removeIf(gameObject -> gameObject.isDestroyed());
+    }
+
     void updateMap() {
-        for(int i = 0; i < gobjs.size(); i++) {
-            gobjs.get(i).update();
-            if(gobjs.get(i).isDestroyed()) {
-                if(gobjs.get(i) instanceof Tank) {
-                } else if (gobjs.get(i) instanceof Bullet){
-                    gobjs.remove(i);
-                }
-            }
+        for (int i = 0; i < gobjs.size(); i++) {
+            gobjs.get(i).update(this);
         }
     }
 
@@ -53,6 +55,7 @@ public class MapLoader {
              * current working directory.
              */
             InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(GameWorld.class.getClassLoader().getResourceAsStream("maps/map1.csv")));
+            this.anims.add(new Animations(300,300,ResourceManager.getAnimation("bulletshoot")));
             try (BufferedReader mapReader = new BufferedReader(isr)) {
                 int row = 0;
                 String[] gameItems;

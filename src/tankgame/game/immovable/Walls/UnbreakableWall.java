@@ -2,6 +2,7 @@ package tankgame.game.immovable.Walls;
 
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
+import tankgame.game.MapLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,7 @@ public class UnbreakableWall extends Wall implements Collidable  {
     }
 
     @Override
-    public void update() {
+    public void update(MapLoader ml) {
 
     }
 

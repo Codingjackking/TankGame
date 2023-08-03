@@ -12,4 +12,12 @@ public class GameConstants {
 
     public static final int END_MENU_SCREEN_WIDTH = 500;
     public static final int END_MENU_SCREEN_HEIGHT = 500;
+    public static final int TANK1_START_X = 50;
+    public static final int TANK1_START_Y = 500;
+    public static final int TANK1_START_ANGLE = 45;
+
+    public static final int TANK2_START_X = 1830;
+    public static final int TANK2_START_Y = 500;
+    public static final int TANK2_START_ANGLE = 225;
+
 }

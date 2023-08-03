@@ -6,28 +6,27 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ResourceManager {
     private final static Map<String, BufferedImage> sprites = new HashMap<>();
-
-//    private final static Map<String, String> spriteInfo = new HashMap<>() {{
-//       put("bullet", "bullet/bullet.jpg");
-//    }};
+    private final static Map<String ,Sound> sound = new HashMap<>();
     private final static Map<String, List<BufferedImage>> animations = new HashMap<>();
     private static final Map<String, Integer> animationInfo = new HashMap<>() {{
-        put("bullet", 32);
-        put("nuke",24);
+        put("bullethit", 24);
+        put("bulletshoot",24);
+        put("powerpick",32);
+        put("puffsmoke",32);
+        put("rocketflame",16);
+        put("rockethit",32);
     }};
-    private static int frameCount;
     private final static Map<String, Clip> sounds = new HashMap<>();
 
     private static BufferedImage loadSprites(String path) throws IOException {
+//        System.out.println("path = " + path);
         return ImageIO.read(
-                Objects.requireNonNull(ResourceManager
+                Objects.requireNonNull(
+                        ResourceManager
                         .class
                         .getClassLoader()
                         .getResource(path)));
@@ -43,19 +42,18 @@ private static BufferedImage loadSprites(String path) throws IOException {
 }
 */
 
-//    private static Clip loadSounds(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-//        AudioInputStream ais = AudioSystem.getAudioInputStream(
-//                Objects.requireNonNull(ResourceManager
-//                        .class
-//                        .getClassLoader()
-//                        .getResource(path)));
-//        Clip c = AudioSystem.getClip();
-//        c.open(ais);
-//        Sound s = new Sound(c);
-//        s.setVolume(-1f);
-//        return (Clip) s;
-//
-//    }
+    private static Clip loadSounds(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        AudioInputStream ais = AudioSystem.getAudioInputStream(
+                Objects.requireNonNull(ResourceManager
+                        .class
+                        .getClassLoader()
+                        .getResource(path)));
+        Clip c = AudioSystem.getClip();
+        c.open(ais);
+        Sound s = new Sound(c);
+        s.setVolume(-1f);
+        return (Clip) s;
+    }
 
     private static void initSprites() {
         try {
@@ -81,35 +79,38 @@ private static BufferedImage loadSprites(String path) throws IOException {
     }
 
     private static void initAnimations() {
-//        String baseName = "animations/%s/%s_%04d.png";
-//        animationInfo.forEach(animationName) -> {
-//            for (int i = 0; i < frameCount; i++) {
-//                String spritePath = baseName.formatted(animationName, animationName, i);
-//                try {
-//                    loadSprites(spritePath);
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        };
+        String baseName = "animations/%s/%s_%04d.png";
+        animationInfo.forEach((animationName, frameCount) -> {
+            List<BufferedImage> frames = new ArrayList<>();
+            try {
+                for (int i = 0; i < frameCount; i++) {
+                    String spritePath = baseName.formatted(animationName, animationName, i);
+                    frames.add(loadSprites(spritePath));
+                }
+                ResourceManager.animations.put(animationName, frames);
+            } catch (IOException e) {
+                System.out.println(e);
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-//    private static void initSounds() {
-//        try {
-//            ResourceManager.sounds.put("music1", (Clip) loadSounds("sounds/music.wav"));
-//            ResourceManager.sounds.put("pickup", (Clip) loadSounds("sounds/pickup.wav"));
-//            ResourceManager.sounds.put("shot", (Clip) loadSounds("sounds/bullet.wav"));
-//            ResourceManager.sounds.put("shotfire", (Clip) loadSounds("sounds/shotfiring.wav"));
-//            ResourceManager.sounds.put("shotboom", (Clip) loadSounds("sounds/shotexplosion.wav"));
-//
-//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    private static void initSounds() {
+        try {
+            ResourceManager.sounds.put("music1", (Clip) loadSounds("sounds/music.wav"));
+            ResourceManager.sounds.put("pickup", (Clip) loadSounds("sounds/pickup.wav"));
+            ResourceManager.sounds.put("shot", (Clip) loadSounds("sounds/bullet.wav"));
+            ResourceManager.sounds.put("shotfire", (Clip) loadSounds("sounds/shotfiring.wav"));
+            ResourceManager.sounds.put("shotboom", (Clip) loadSounds("sounds/shotexplosion.wav"));
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static void loadResources() {
         ResourceManager.initSprites();
-//        ResourceManager.initSounds();
-//        ResourceManager.initAnimations();
+        ResourceManager.initSounds();
+        ResourceManager.initAnimations();
     }
     public static BufferedImage getSprite(String type) {
         if (!ResourceManager.sprites.containsKey(type)) {
@@ -118,12 +119,12 @@ private static BufferedImage loadSprites(String path) throws IOException {
         return ResourceManager.sprites.get(type);
     }
 
-//    public static BufferedImage getAnimation(String type) {
-//        if (!ResourceManager.animations.containsKey(type)) {
-//            throw new RuntimeException("%s is missing from sprite resources".formatted(type));
-//        }
-//        return ResourceManager.animations.get(type);
-//    }
+    public static List<BufferedImage> getAnimation(String type) {
+        if (!ResourceManager.animations.containsKey(type)) {
+            throw new RuntimeException("%s is missing from sprite resources".formatted(type));
+        }
+        return ResourceManager.animations.get(type);
+    }
     public static Clip getSound(String type) {
         if (!ResourceManager.sounds.containsKey(type)) {
             throw new RuntimeException("%s is missing from sound resources".formatted(type));
