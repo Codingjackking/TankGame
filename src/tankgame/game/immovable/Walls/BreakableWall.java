@@ -53,15 +53,6 @@ public class BreakableWall extends Wall implements Collidable {
         return false;
     }
 
-//    public void hitWall(int damage) {
-//        if (this.health > 0) {
-//            this.health -= damage;
-//        } else {
-//            setHealth(0);
-//            this.img = ResourceManager.getSprite("break2");
-//        }
-//    }
-
     public void removeHealth (int damage) {
         if(this.health > 0) {
             this.health -= damage;
