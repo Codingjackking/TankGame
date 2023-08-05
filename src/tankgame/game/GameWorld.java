@@ -28,7 +28,6 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
     static long tickCount = 0;
-//    List<Animations> anims = new ArrayList<Animations>();
 
     /**
      *
@@ -123,7 +122,7 @@ public class GameWorld extends JPanel implements Runnable {
         BufferedImage leftHalf = checkDimension(t1);
         BufferedImage rightHalf = checkDimension(t2);
         g2.drawImage(leftHalf,0,0,null);
-        g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2 + 5, 0, null);
+        g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
     }
     public void renderMiniMap(Graphics2D g2, BufferedImage world) {
         // Creates the mini map

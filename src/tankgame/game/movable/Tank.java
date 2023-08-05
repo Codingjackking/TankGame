@@ -32,7 +32,6 @@ public class Tank extends MovableObjects implements Collidable {
     private final float ROTATIONSPEED = 3.0f;
 
     private int health = 5;
-    private int damage = 1;
     private int life = 3;
     private int shieldHealth = 0;
     private int speedBoostDuration = 0;
@@ -47,6 +46,7 @@ public class Tank extends MovableObjects implements Collidable {
     private Bullet b;
     private long timeSinceLastShot = 0L;
     private long cooldown = 2000;
+    private int damage;
 
     public float getX() {
         return x;
@@ -73,6 +73,7 @@ public class Tank extends MovableObjects implements Collidable {
         this.angle = angle;
         this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
         this.ammo = new ArrayList<>();
+        this.damage = 1;
     }
 
     public List<Bullet> getAmmo() {
@@ -205,9 +206,9 @@ public class Tank extends MovableObjects implements Collidable {
         ResourceManager.getSound("shotfire").playSound();
     }
 
-    public void hitTank() {
-        if (this.health > 1) {
-            this.removeHealth(damage);
+    public void hitTank(int damage) {
+        if (this.health > this.damage) {
+            this.removeHealth(this.damage);
         } else if (this.life > 1) {
             setX(originalX);
             setY(originalY);
@@ -245,10 +246,13 @@ public class Tank extends MovableObjects implements Collidable {
             this.damage++;
         }
     }
+    public int getDamage() {
+        return damage;
+    }
 
     // Method to add shield when the tank collides with the shield power-up
     public void addShield() {
-        shieldHealth = 2;
+        shieldHealth = 1;
     }
 
     // Method to add a temporary speed boost when the tank collides with the speed power-up
@@ -307,10 +311,6 @@ public class Tank extends MovableObjects implements Collidable {
             if (obj instanceof Wall) {
                 this.bump();
             }
-//            if (obj instanceof BreakableWall && obj.isCollidable()) {
-//                ((BreakableWall) obj).hitWall();
-//                this.destroy();
-//            }
             if (obj instanceof PowerUp) {
                 ((PowerUp) obj).apply(this);
                 ml.anims.add(new Animations(x,y,ResourceManager.getAnimation("powerpick")));
@@ -412,7 +412,7 @@ public class Tank extends MovableObjects implements Collidable {
             g2d.setColor(Color.BLUE);
             g2d.drawRect((int) x, (int) y - 12, 10*health, 8);
             //Shooting Cooldown Timer;
-            long currentWidth = 20 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
+            long currentWidth = 50 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
             if (currentWidth > 50) {
                 currentWidth = 50;
             }
@@ -436,4 +436,5 @@ public class Tank extends MovableObjects implements Collidable {
                     10);
         }
     }
+
 }

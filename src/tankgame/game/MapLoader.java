@@ -55,7 +55,6 @@ public class MapLoader {
              * current working directory.
              */
             InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(GameWorld.class.getClassLoader().getResourceAsStream("maps/map1.csv")));
-            this.anims.add(new Animations(300,300,ResourceManager.getAnimation("bulletshoot")));
             try (BufferedReader mapReader = new BufferedReader(isr)) {
                 int row = 0;
                 String[] gameItems;

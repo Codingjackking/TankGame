@@ -129,8 +129,4 @@ private static BufferedImage loadSprites(String path) throws IOException {
         }
         return ResourceManager.sounds.get(type);
     }
-
-    public static void main(String[] args) {
-        ResourceManager.loadResources();
-    }
 }

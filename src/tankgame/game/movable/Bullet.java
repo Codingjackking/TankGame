@@ -13,8 +13,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class Bullet extends MovableObjects implements Collidable {
-    private Rectangle hitBox;
+public class Bullet extends MovableObjects implements Collidable { private Rectangle hitBox;
     private float x;
     private float y;
     private float vx;
@@ -38,6 +37,7 @@ public class Bullet extends MovableObjects implements Collidable {
         this.hitBox = new Rectangle((int) x, (int) y,this.img.getWidth(), this.img.getHeight());
         this.isCollidable = true;
         this.tank = tank;
+        this.damage = tank.getDamage();
     }
     public void update(MapLoader ml) {
         this.moveForwards();
@@ -118,7 +118,7 @@ public class Bullet extends MovableObjects implements Collidable {
     public void collide(Collidable obj) {
         if (obj instanceof Tank) {
             if (!myTankCheck((Tank) obj)) {
-                ((Tank) obj).hitTank();
+                ((Tank) obj).removeHealth(damage);
                 ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
                 this.destroy();
             }
@@ -126,9 +126,8 @@ public class Bullet extends MovableObjects implements Collidable {
             ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
             this.destroy();
             if (obj instanceof BreakableWall) {
-                ((BreakableWall) obj).hitWall();
+                ((BreakableWall) obj).removeHealth(this.damage);
                 if (((BreakableWall) obj).getHealth() == 0) {
-//                ml.removeGameObject((GameObject) obj);
                     this.destroy();
                 }
             }
@@ -138,7 +137,6 @@ public class Bullet extends MovableObjects implements Collidable {
     public Rectangle getHitBox() {
         return hitBox.getBounds();
     }
-
     @Override
     public boolean checkCollision(Collidable with) {
         return this.getHitBox().intersects(with.getHitBox());

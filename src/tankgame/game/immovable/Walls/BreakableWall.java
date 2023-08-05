@@ -2,7 +2,6 @@ package tankgame.game.immovable.Walls;
 
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
-import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 
 import java.awt.*;
@@ -14,7 +13,6 @@ public class BreakableWall extends Wall implements Collidable {
     private Rectangle hitBox;
     private boolean isCollidable;
     private int health = 2;
-    private int damage = 1;
 
     public BreakableWall(float x, float y, BufferedImage img) {
         super(x, y, img);
@@ -55,22 +53,23 @@ public class BreakableWall extends Wall implements Collidable {
         return false;
     }
 
-    public void hitWall() {
-        if (this.health > 1) {
-            removeHealth(damage);
-        } else {
-            setHealth(0);
-            this.img = ResourceManager.getSprite("break2");
-        }
-    }
+//    public void hitWall(int damage) {
+//        if (this.health > 0) {
+//            this.health -= damage;
+//        } else {
+//            setHealth(0);
+//            this.img = ResourceManager.getSprite("break2");
+//        }
+//    }
+
     public void removeHealth (int damage) {
         if(this.health > 0) {
             this.health -= damage;
         }
         if(this.health <= 0) {
             this.img = ResourceManager.getSprite("empty");
-        } else if (this.health <= 5) {
-            this.img = ResourceManager.getSprite("break1");
+        } else if (this.health <= 1) {
+            this.img = ResourceManager.getSprite("break2");
         }
     }
     public void setHealth(int health) {
