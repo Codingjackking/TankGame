@@ -1,7 +1,6 @@
 package tankgame.game.immovable.Walls;
 
 import tankgame.game.Collidable;
-import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 
 import java.awt.*;
@@ -14,8 +13,6 @@ public class UnbreakableWall extends Wall implements Collidable  {
 
     public UnbreakableWall(float x, float y, BufferedImage img) {
         super(x,y,img);
-//        this.x = x;
-//        this.y = y;
         this.img = img;
         this.hitBox = new Rectangle((int) x, (int) y,this.img.getWidth(), this.img.getHeight());
         this.isCollidable = true;

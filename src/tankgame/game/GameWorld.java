@@ -24,10 +24,8 @@ public class GameWorld extends JPanel implements Runnable {
     private Tank t1;
     private Tank t2;
     private MapLoader ml;
-    private Clip music;
     private final Launcher lf;
     private long tick = 0;
-    static long tickCount = 0;
 
     /**
      *

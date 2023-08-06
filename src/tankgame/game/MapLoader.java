@@ -2,11 +2,6 @@ package tankgame.game;
 
 import tankgame.GameConstants;
 import tankgame.Resources.ResourceManager;
-import tankgame.game.immovable.PowerUps.*;
-import tankgame.game.immovable.Walls.BreakableWall;
-import tankgame.game.immovable.Walls.UnbreakableWall;
-import tankgame.game.movable.Bullet;
-import tankgame.game.movable.Tank;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,12 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class MapLoader {
     private List<GameObject> gobjs;
     private GameWorld gw;
+
     public List<Animations> anims = new ArrayList<Animations>();
     public List<GameObject> getGameObjects() {
         return gobjs;

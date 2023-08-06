@@ -2,7 +2,6 @@ package tankgame.game.immovable.PowerUps;
 
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
-import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
 
@@ -13,8 +12,6 @@ public class  DamageUP extends PowerUp {
     float x,y;
     BufferedImage img;
     private Rectangle hitBox;
-    private final int respawnDelay = 12000; // 12 seconds respawn delay
-    private long respawnTime = 0;
     private boolean isCollidable;
     private int damage;
 
@@ -39,10 +36,6 @@ public class  DamageUP extends PowerUp {
         this.img = ResourceManager.getSprite("empty");
 
     }
-
-//    public void respawn() {
-//        respawnTime = System.currentTimeMillis() + respawnDelay;
-//    }
 
     @Override
     public boolean isCollidable() {
@@ -73,7 +66,6 @@ public class  DamageUP extends PowerUp {
     public void drawImage(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, (int) x, (int) y, null);
-//        g.drawImage(this.img, (int) x, (int) y, null);
     }
 
     @Override

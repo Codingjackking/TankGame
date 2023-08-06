@@ -24,8 +24,6 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
     private Bullet b;
     private final float R = 3;
     private  BufferedImage img;
-    private boolean isActive = true;
-    private boolean hidden = true;
     private int damage;
 
     public Bullet(MapLoader ml, Tank tank, float x, float y, float angle, BufferedImage img) {
@@ -51,7 +49,6 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
         y += vy;
-//        checkBorder();
         moveBound();
     }
 
@@ -78,14 +75,6 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
             this.destroy();
         }
     }
-
-//    public boolean myTankCheck(Tank check) {
-//        if (this.myTank.equals(check)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 
     private void runCollisions() {
         for(GameObject obj : this.ml.getGameObjects()) {
@@ -119,7 +108,6 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
         if (obj instanceof Tank) {
             if (!myTankCheck((Tank) obj)) {
                 ((Tank) obj).hitTank(damage);
-//                ((Tank) obj).removeHealth(damage);
                 ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
                 this.destroy();
             }

@@ -12,7 +12,6 @@ import java.util.Objects;
 public class Tank2WinsPanel extends JPanel {
 
     private BufferedImage menuBackground;
-    private JButton start;
     private JButton exit;
     private Launcher lf;
 
@@ -27,7 +26,6 @@ public class Tank2WinsPanel extends JPanel {
         }
         this.setBackground(Color.BLACK);                                        // sets background black
         this.setLayout(null);
-
 
         exit = new JButton("Congrats!!");                                             // exits game
         exit.setSize(new Dimension(200,100));

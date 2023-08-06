@@ -2,7 +2,6 @@ package tankgame.game.immovable.PowerUps;
 
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
-import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
 
@@ -66,7 +65,6 @@ public class Health extends PowerUp {
     public void drawImage(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, (int) x, (int) y, null);
-//        buffer.drawImage(this.img, (int) x, (int) y, null);
     }
 
     @Override

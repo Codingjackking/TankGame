@@ -2,7 +2,6 @@ package tankgame.game.immovable.PowerUps;
 
 import tankgame.Resources.ResourceManager;
 import tankgame.game.Collidable;
-import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
 
@@ -39,10 +38,6 @@ public class Shield extends PowerUp {
         this.img = ResourceManager.getSprite("empty");
     }
 
-    public void respawn() {
-        respawnTime = System.currentTimeMillis() + respawnDelay;
-    }
-
     @Override
     public boolean isCollidable() {
         return isCollidable;
@@ -73,7 +68,6 @@ public class Shield extends PowerUp {
     public void drawImage(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, (int) x, (int) y, null);
-//        g.drawImage(this.img, (int) x, (int) y, null);
     }
 
     @Override

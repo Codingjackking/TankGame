@@ -4,11 +4,9 @@ package tankgame.menus;
 import tankgame.Launcher;
 import tankgame.Resources.ResourceManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class StartMenuPanel extends JPanel {
 

@@ -140,7 +140,6 @@ public class Tank extends MovableObjects implements Collidable {
         if (this.RightPressed) {
             this.rotateRight();
         }
-//        if (this.ShootPressed) {
         if (this.ShootPressed  && (this.timeSinceLastShot + this.cooldown) < System.currentTimeMillis()) {
             this.timeSinceLastShot = System.currentTimeMillis();
             this.fireBullet();
@@ -185,16 +184,6 @@ public class Tank extends MovableObjects implements Collidable {
     private void die() {
         this.life--;
         this.health = 5;
-//        if (this.life > 1) {
-//            setX(originalX);
-//            setY(originalY);
-//            this.R = 2;
-//            this.health = 5;
-//            this.life--;
-//            moveBound();
-//        } else {
-//            this.life = 0;
-//        }
     }
 
     // Method to fire the bullet
@@ -230,11 +219,6 @@ public class Tank extends MovableObjects implements Collidable {
             removeHealth(damage);
         }
     }
-//    public void removeHealth(int damage) {
-//        if (this.health > this.damage) {
-//            this.health -= damage;
-//        }
-//    }
     public void removeHealth(int damage) {
         if (shieldHealth > 0) {
             // If shield is active, apply damage to shield first
@@ -251,6 +235,7 @@ public class Tank extends MovableObjects implements Collidable {
             health -= damage;
         }
     }
+
     public void addLife() {
         if (life < 3) {
             life += 1;
@@ -272,24 +257,15 @@ public class Tank extends MovableObjects implements Collidable {
 
     // Method to add shield when the tank collides with the shield power-up
     public void addShield() {
-        shieldHealth = 1;
+        shieldHealth += 1;
     }
 
-    public void setShieldHealth(int shieldHealth) {
-        this.shieldHealth = shieldHealth;
-    }
-
-    public int getShieldHealth() {
-        return shieldHealth;
-    }
-    // Method to add a temporary speed boost when the tank collides with the speed power-up
     public void addSpeedBoost() {
         speedBoostDuration = 1000; // Set the duration of the speed boost in milliseconds (adjust as needed)
         R = 3; // Set the speed of the tank during the speed boost (adjust as needed)
     }
     public void removeBullet(Bullet bullet) {
         ammo.remove(bullet);
-//        ml.removeGameObject(bullet);
     }
 
     private void runCollisions() {

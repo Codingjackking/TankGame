@@ -4,7 +4,6 @@ import tankgame.Resources.ResourceManager;
 import tankgame.game.immovable.PowerUps.*;
 import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.UnbreakableWall;
-import tankgame.game.immovable.Walls.Wall;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

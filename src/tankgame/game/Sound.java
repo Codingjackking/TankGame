@@ -1,10 +1,7 @@
 package tankgame.game;
 
-import tankgame.Resources.ResourceManager;
 
 import javax.sound.sampled.*;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class Sound {
     private Clip sound;
@@ -24,6 +21,7 @@ public class Sound {
     public void setLooping() {
         this.sound.loop(Clip.LOOP_CONTINUOUSLY);
     }
+
     public void stop() {
         if (this.sound.isRunning()) {
             this.sound.stop();

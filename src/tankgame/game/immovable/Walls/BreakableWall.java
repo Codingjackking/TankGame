@@ -63,9 +63,6 @@ public class BreakableWall extends Wall implements Collidable {
             this.img = ResourceManager.getSprite("break2");
         }
     }
-    public void setHealth(int health) {
-        this.health = health;
-    }
 
     @Override
     public void drawImage(Graphics g) {

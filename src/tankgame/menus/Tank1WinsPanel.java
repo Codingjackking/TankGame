@@ -12,7 +12,6 @@ import java.util.Objects;
 public class Tank1WinsPanel extends JPanel {
 
     private BufferedImage menuBackground;
-    private JButton start;
     private JButton exit;
     private Launcher lf;
 
