@@ -47,14 +47,17 @@ IntelliJ Idea
 
 ## Steps to run your Project:
 1. There are three option to run the project:
+
 Option One:
 1. In the IDE or in the File Explorer, open the Jar folder.
 2. Double click on the jar file.
 3. Game is now running.
+
 Option Two:
 1. In the IDE, look for the Launcher class.
 2. Right click on it and look for run Launcher.main().
 3. Game is now running.
+
 Option Three:
 1. Put the jar from the jar folder where no IDE has access to, ideally put it in Desktop.
 2. Then Open any command lines such as Powershell or Command Prompt.
