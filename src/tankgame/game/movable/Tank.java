@@ -5,6 +5,7 @@ import tankgame.Resources.ResourceManager;
 
 import tankgame.game.*;
 import tankgame.game.immovable.PowerUps.PowerUp;
+import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.Wall;
 
 import java.awt.*;
@@ -33,7 +34,7 @@ public class Tank extends MovableObjects implements Collidable {
 
     private int health = 5;
     private int life = 3;
-    private int shieldHealth = 0;
+    private int shieldHealth;
     private int speedBoostDuration = 0;
 
     private BufferedImage img;
@@ -64,8 +65,8 @@ public class Tank extends MovableObjects implements Collidable {
         super(ml, x, y, angle, img);
         this.x = x;
         this.y = y;
-//        this.originalX = x;
-//        this.originalY = y;
+        this.originalX = x;
+        this.originalY = y;
         this.vx = vx;
         this.vy = vy;
         this.img = img;
@@ -74,6 +75,7 @@ public class Tank extends MovableObjects implements Collidable {
         this.hitBox = new Rectangle((int) x, (int) y, this.img.getWidth(), this.img.getHeight());
         this.ammo = new ArrayList<>();
         this.damage = 1;
+        this.shieldHealth = 0;
     }
 
     public List<Bullet> getAmmo() {
@@ -183,22 +185,22 @@ public class Tank extends MovableObjects implements Collidable {
     private void die() {
         this.life--;
         this.health = 5;
+//        if (this.life > 1) {
+//            setX(originalX);
+//            setY(originalY);
+//            this.R = 2;
+//            this.health = 5;
+//            this.life--;
+//            moveBound();
+//        } else {
+//            this.life = 0;
+//        }
     }
 
-    private int safeShootX() {
-        double cx = 31 * Math.cos(Math.toRadians(this.angle));
-        return (int) (x + this.img.getWidth() / 2f + cx - 4f);
-    }
-
-    private int safeShootY() {
-        double cy = 31 * Math.cos(Math.toRadians(this.angle));
-        return (int) (y + this.img.getWidth() / 2f + cy - 4f);
-    }
     // Method to fire the bullet
     private void fireBullet() {
         int startX = (int) ((this.x + 13) + (37 * (int) Math.round(Math.cos(Math.toRadians(angle)))));
         int startY = (int) ((this.y + 9) + (37 * (int) Math.round(Math.sin(Math.toRadians(angle)))));
-//        Bullet b = new Bullet(ml, this, x+img.getWidth(), y+ (float) img.getHeight() /2-12,angle,ResourceManager.getSprite("bullet"));
         Bullet b = new Bullet(ml, this, startX, startY, angle, ResourceManager.getSprite("bullet"));
         this.ammo.add(b);
         ml.addGameObject(b);
@@ -206,20 +208,6 @@ public class Tank extends MovableObjects implements Collidable {
         ResourceManager.getSound("shotfire").playSound();
     }
 
-    public void hitTank(int damage) {
-        if (this.health > this.damage) {
-            this.removeHealth(this.damage);
-        } else if (this.life > 1) {
-            setX(originalX);
-            setY(originalY);
-            this.R = 2;
-            this.health = 5;
-            this.life--;
-            moveBound();
-        } else {
-            this.life = 0;
-        }
-    }
     // Method to add health when the tank collides with the health power-up
     public void addHealth() {
         if (health < 5) {
@@ -227,10 +215,42 @@ public class Tank extends MovableObjects implements Collidable {
         }
     }
 
-    public void removeHealth(int damage) {
-        this.health -= damage;
+    public void hitTank(int damage) {
+        if (shieldHealth > 0) {
+            // If shield exists, reduce shield health
+            shieldHealth -= damage;
+            if (shieldHealth < 0) {
+                // If shield health goes below zero, apply remaining damage to tank health
+                removeHealth(Math.abs(shieldHealth));
+                shieldHealth = 0;
+            }
+        }
+        else {
+            // If no shield, apply damage directly to tank health
+            removeHealth(damage);
+        }
     }
-
+//    public void removeHealth(int damage) {
+//        if (this.health > this.damage) {
+//            this.health -= damage;
+//        }
+//    }
+    public void removeHealth(int damage) {
+        if (shieldHealth > 0) {
+            // If shield is active, apply damage to shield first
+            if (shieldHealth >= damage) {
+                shieldHealth -= damage;
+            } else {
+                // If shield health is not sufficient to absorb all the damage, subtract from shield and the rest from health
+                int remainingDamage = damage - shieldHealth;
+                shieldHealth = 0;
+                health -= remainingDamage;
+            }
+        } else {
+            // If no shield, directly apply damage to health
+            health -= damage;
+        }
+    }
     public void addLife() {
         if (life < 3) {
             life += 1;
@@ -255,6 +275,13 @@ public class Tank extends MovableObjects implements Collidable {
         shieldHealth = 1;
     }
 
+    public void setShieldHealth(int shieldHealth) {
+        this.shieldHealth = shieldHealth;
+    }
+
+    public int getShieldHealth() {
+        return shieldHealth;
+    }
     // Method to add a temporary speed boost when the tank collides with the speed power-up
     public void addSpeedBoost() {
         speedBoostDuration = 1000; // Set the duration of the speed boost in milliseconds (adjust as needed)
@@ -309,6 +336,9 @@ public class Tank extends MovableObjects implements Collidable {
                 this.push((GameObject) obj);
             }
             if (obj instanceof Wall) {
+                this.bump();
+            }
+            if (obj instanceof BreakableWall) {
                 this.bump();
             }
             if (obj instanceof PowerUp) {
@@ -386,13 +416,6 @@ public class Tank extends MovableObjects implements Collidable {
     }
 
 
-    public void setShieldHealth(int shieldHealth) {
-        this.shieldHealth = shieldHealth;
-    }
-
-    public int getShieldHealth() {
-        return shieldHealth;
-    }
 
     @Override
     public String toString() {
@@ -401,33 +424,36 @@ public class Tank extends MovableObjects implements Collidable {
 
     @Override
     public void drawImage(Graphics g) {
-            AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
-            rotation.rotate(Math.toRadians(angle), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.drawImage(this.img, rotation, null);
+        AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
+        rotation.rotate(Math.toRadians(angle), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(this.img, rotation, null);
 
-            g2d.setColor(Color.RED);
-            g2d.drawRect((int) x, (int) y, this.img.getWidth(null), this.img.getHeight(null));
-//            this.ammo.forEach(b -> b.drawImage(g2d));
-            g2d.setColor(Color.BLUE);
-            g2d.drawRect((int) x, (int) y - 12, 10*health, 8);
-            //Shooting Cooldown Timer;
-            long currentWidth = 50 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
-            if (currentWidth > 50) {
-                currentWidth = 50;
-            }
-            g2d.fillRect((int) x, (int) y - 12, (int) currentWidth, 8);
+        //Drawing the color of the hitbox
+        g2d.setColor(Color.RED);
+        g2d.drawRect((int) x, (int) y, this.img.getWidth(null), this.img.getHeight(null));
+        g2d.setColor(Color.blue);
+        g2d.drawRect((int) x, (int) y - 10, 10 * health, 8);
+        //Shooting Cooldown Timer;
+        long currentWidth = 50 - ((this.timeSinceLastShot + this.cooldown) - System.currentTimeMillis()) / 40;
+        if (currentWidth > 50) {
+            currentWidth = 50;
+        }
+        g2d.fillRect((int) x, (int) y - 10, (int) currentWidth, 8);
 
+        // Draw the cyan shield bar above the health bar
+        g2d.setColor(Color.CYAN);
+        g2d.fillRect((int) x, (int) y - 22, 10 * shieldHealth, 8);
 
         // Draw the white background of the health bar
         g.setColor(Color.WHITE);
-        g.fillRect((int) x, (int) (y - 20), 50, 8);
+        g.fillRect((int) x, (int) (y - 16), 50, 8);
 
-        // Draw the green part representing the health
-        g.setColor(Color.GREEN);
-        g.fillRect((int) x, (int) (y - 20), 10 * health, 8);
+        // Draw the red part representing the health
+        g.setColor(Color.RED);
+        g.fillRect((int) x, (int) (y - 16), 10 * health, 8);
 
-        //Drawing the green part representing lifes
+        //Drawing the green part representing life
         g.setColor(Color.GREEN);
         for (int i = 0; i < this.life; i++) {
             g.fillOval(((int) x + this.img.getWidth(null) / 2 - (3 * 10 + 2 * 5) / 2) + (10 + 5) * i,

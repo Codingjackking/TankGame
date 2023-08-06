@@ -118,7 +118,8 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
     public void collide(Collidable obj) {
         if (obj instanceof Tank) {
             if (!myTankCheck((Tank) obj)) {
-                ((Tank) obj).removeHealth(damage);
+                ((Tank) obj).hitTank(damage);
+//                ((Tank) obj).removeHealth(damage);
                 ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
                 this.destroy();
             }
@@ -152,7 +153,9 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
 
     @Override
     public void reset() {
-
+        for (Bullet b : tank.getAmmo()) {
+            ml.removeGameObject(b);
+        }
+        tank.getAmmo().clear();
     }
-
 }

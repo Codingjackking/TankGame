@@ -37,7 +37,6 @@ public class Shield extends PowerUp {
     public void apply(Tank tank) {
         tank.addShield();
         this.img = ResourceManager.getSprite("empty");
-
     }
 
     public void respawn() {
