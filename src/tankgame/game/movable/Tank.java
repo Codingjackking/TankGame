@@ -193,6 +193,7 @@ public class Tank extends MovableObjects implements Collidable {
         this.ammo.add(b);
         ml.addGameObject(b);
         ml.anims.add(new Animations(startX,startY,ResourceManager.getAnimation("bulletshoot")));
+        ResourceManager.getSound("shotfire").setVolume(1f);
         ResourceManager.getSound("shotfire").playSound();
     }
 
@@ -280,14 +281,14 @@ public class Tank extends MovableObjects implements Collidable {
     }
 
     private void checkBorder() {
-        if (x < 30) {
-            x = 30;
+        if (x < 0) {
+            x = 0;
         }
         if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
             x = GameConstants.GAME_WORLD_WIDTH - 88;
         }
-        if (y < 30) {
-            y = 30;
+        if (y < 0) {
+            y = 0;
         }
         if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
             y = GameConstants.GAME_WORLD_HEIGHT - 80;

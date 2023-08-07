@@ -30,6 +30,7 @@ public class GameWorld extends JPanel implements Runnable {
     public void run() {
         try {
             this.resetGame();
+            ResourceManager.getSound("bg").setVolume(0.1f);
             ResourceManager.getSound("bg").playSound();
             while (true) {
                 this.tick++;
@@ -98,18 +99,19 @@ public class GameWorld extends JPanel implements Runnable {
     private BufferedImage checkDimension(Tank tank) {
         BufferedImage checked;
         int x, y;
-        y = Math.max(0, Math.min((int) (tank.getY() - GameConstants.GAME_SCREEN_HEIGHT / 2), GameConstants.GAME_WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT));
         x = Math.max(0, Math.min((int) (tank.getX() - GameConstants.GAME_SCREEN_WIDTH / 4), GameConstants.GAME_WORLD_WIDTH - GameConstants.GAME_SCREEN_WIDTH / 2));
+        y = Math.max(0, Math.min((int) (tank.getY() - GameConstants.GAME_SCREEN_HEIGHT / 2), GameConstants.GAME_WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT));
         checked = world.getSubimage(x, y, GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
         return checked;
     }
+
 
     public void renderSplitScreens(Graphics2D g2, BufferedImage world) {
         // Split Screen for both tanks
         BufferedImage leftHalf = checkDimension(t1);
         BufferedImage rightHalf = checkDimension(t2);
         g2.drawImage(leftHalf,0,0,null);
-        g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2, 0, null);
+        g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH / 2, 0, null);
     }
     public void renderMiniMap(Graphics2D g2, BufferedImage world) {
         // Creates the mini map

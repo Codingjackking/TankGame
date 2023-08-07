@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class MapLoader {
     private List<GameObject> gobjs;
@@ -38,8 +37,7 @@ public class MapLoader {
 //        gobjs.forEach(GameObject::reset);
     }
 
-    /*
-    Conflict with resetting of Map,
+    /*Conflict with resetting of Map,
     resulting in Walls and PowerUps being missing
     */
 //    void clearDeadObjects() {
@@ -47,19 +45,19 @@ public class MapLoader {
 //    }
 
     void updateMap() {
-       /* for (GameObject gobj : gobjs) {
-            gobj.update(this);
-        }*/
-        IntStream.range(0, gobjs.size()).forEach(i -> {
+//        for (GameObject gobj : gobjs) {
+//            gobj.update(this);
+//        }
+        for(int i = 0; i < gobjs.size(); i++) {
             gobjs.get(i).update(this);
-            if (gobjs.get(i).isDestroyed()) {
-                if (gobjs.get(i) instanceof Bullet) {
+            if(gobjs.get(i).isDestroyed()) {
+                if (gobjs.get(i) instanceof Bullet){
                     gobjs.remove(i);
                 } else if (gobjs.get(i) instanceof BreakableWall) {
                     gobjs.remove(i);
                 }
             }
-        });
+        }
     }
 
     void initMap() {

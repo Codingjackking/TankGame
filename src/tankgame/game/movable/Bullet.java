@@ -108,10 +108,14 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
             if (!myTankCheck((Tank) obj)) {
                 ((Tank) obj).hitTank(damage);
                 ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
+                ResourceManager.getSound("shotboom").setVolume(1f);
+                ResourceManager.getSound("shotboom").playSound();
                 this.destroy();
             }
         } else if (obj instanceof Wall && obj.isCollidable()) {
             ml.anims.add(new Animations(x, y, ResourceManager.getAnimation("bullethit")));
+            ResourceManager.getSound("shotboom").setVolume(1f);
+            ResourceManager.getSound("shotboom").playSound();
             this.destroy();
             if (obj instanceof BreakableWall) {
                 ((BreakableWall) obj).removeHealth(this.damage);
