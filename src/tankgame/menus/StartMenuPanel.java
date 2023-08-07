@@ -2,8 +2,7 @@ package tankgame.menus;
 
 
 import tankgame.Launcher;
-import tankgame.Resources.ResourceManager;
-
+import tankgame.resources.ResourceManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;

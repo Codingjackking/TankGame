@@ -1,10 +1,9 @@
 package tankgame.game.immovable.PowerUps;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -27,14 +26,12 @@ public class  DamageUP extends PowerUp {
 
     @Override
     public void update(MapLoader ml) {
-
     }
 
     @Override
     public void apply(Tank tank) {
         tank.addDamage();
         this.img = ResourceManager.getSprite("empty");
-
     }
 
     @Override

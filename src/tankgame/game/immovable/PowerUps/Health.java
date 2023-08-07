@@ -1,6 +1,6 @@
 package tankgame.game.immovable.PowerUps;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
@@ -27,7 +27,6 @@ public class Health extends PowerUp {
 
     @Override
     public void update(MapLoader ml) {
-
     }
 
     @Override
@@ -73,5 +72,4 @@ public class Health extends PowerUp {
         this.isCollidable = true;
         this.img = ResourceManager.getSprite("health");
     }
-
 }

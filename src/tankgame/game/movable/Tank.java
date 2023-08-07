@@ -1,13 +1,12 @@
 package tankgame.game.movable;
 
 import tankgame.GameConstants;
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 
 import tankgame.game.*;
 import tankgame.game.immovable.PowerUps.PowerUp;
 import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.Wall;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -391,8 +390,6 @@ public class Tank extends MovableObjects implements Collidable {
         return this.getHitBox().intersects(with.getHitBox());
     }
 
-
-
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;
@@ -438,5 +435,4 @@ public class Tank extends MovableObjects implements Collidable {
                     10);
         }
     }
-
 }

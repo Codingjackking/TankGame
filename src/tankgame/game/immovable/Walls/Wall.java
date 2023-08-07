@@ -1,7 +1,6 @@
 package tankgame.game.immovable.Walls;
 
 import tankgame.game.immovable.ImmovableObjects;
-
 import java.awt.image.BufferedImage;
 
 public abstract class Wall extends ImmovableObjects {

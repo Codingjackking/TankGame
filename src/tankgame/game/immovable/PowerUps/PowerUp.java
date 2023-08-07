@@ -3,7 +3,6 @@ package tankgame.game.immovable.PowerUps;
 import tankgame.game.Collidable;
 import tankgame.game.immovable.ImmovableObjects;
 import tankgame.game.movable.Tank;
-
 import java.awt.image.BufferedImage;
 
 public abstract class PowerUp extends ImmovableObjects implements Collidable {

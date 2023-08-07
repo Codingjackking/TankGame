@@ -1,6 +1,6 @@
 package tankgame;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.GameWorld;
 import tankgame.menus.EndGamePanel;
 import tankgame.menus.Tank1WinsPanel;
@@ -99,7 +99,6 @@ public class Launcher {
                 // set the size of the jFrame to the expected size for the end panel
                 this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH,GameConstants.END_MENU_SCREEN_HEIGHT);
         }
-
         this.cl.show(mainPanel, type); // change current panel shown on main panel tp the panel denoted by type.
         this.jf.setVisible(true); // show the JFrame
     }

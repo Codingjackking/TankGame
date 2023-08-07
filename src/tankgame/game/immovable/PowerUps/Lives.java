@@ -1,10 +1,9 @@
 package tankgame.game.immovable.PowerUps;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.MapLoader;
 import tankgame.game.movable.Tank;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -74,6 +73,4 @@ public class Lives extends PowerUp {
         this.isCollidable = true;
         this.img = ResourceManager.getSprite("lives");
     }
-
-
 }

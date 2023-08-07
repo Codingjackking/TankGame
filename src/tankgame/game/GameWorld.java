@@ -1,25 +1,16 @@
 package tankgame.game;
 
-
 import tankgame.GameConstants;
 import tankgame.Launcher;
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.movable.Tank;
 import tankgame.game.movable.TankControl;
-
-import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * @author anthony-pc
- */
 public class GameWorld extends JPanel implements Runnable {
-
     private BufferedImage world;
     private Tank t1;
     private Tank t2;
@@ -43,7 +34,7 @@ public class GameWorld extends JPanel implements Runnable {
             while (true) {
                 this.tick++;
                 ml.updateMap();
-                ml.clearDeadObjects();
+//                ml.clearDeadObjects();
                 this.repaint();   // redraw game
                 this.ml.anims.forEach(Animations::update);
                 /*
@@ -69,7 +60,6 @@ public class GameWorld extends JPanel implements Runnable {
             System.out.println(ignored);
         }
     }
-
 
     /**
      * Reset game to its initial state.
@@ -98,7 +88,6 @@ public class GameWorld extends JPanel implements Runnable {
         ml.addGameObject(t2);
         this.lf.getJf().addKeyListener(tc1);
         this.lf.getJf().addKeyListener(tc2);
-
     }
 
     private void resetTanks() {

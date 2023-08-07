@@ -37,5 +37,4 @@ public class Animations {
             g.drawImage(this.frames.get(currentFrame), (int) x, (int) y, null);
         }
     }
-
 }

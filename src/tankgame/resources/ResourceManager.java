@@ -1,7 +1,6 @@
-package tankgame.Resources;
+package tankgame.resources;
 
 import tankgame.game.Sound;
-
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
@@ -99,6 +98,7 @@ public class ResourceManager {
         ResourceManager.initSounds();
         ResourceManager.initAnimations();
     }
+
     public static BufferedImage getSprite(String type) {
         if (!ResourceManager.sprites.containsKey(type)) {
             throw new RuntimeException("%s is missing from sprite resources".formatted(type));
@@ -112,6 +112,7 @@ public class ResourceManager {
         }
         return ResourceManager.animations.get(type);
     }
+
     public static Sound getSound(String type) {
         if (!ResourceManager.sounds.containsKey(type)) {
             throw new RuntimeException("%s is missing from sound resources".formatted(type));

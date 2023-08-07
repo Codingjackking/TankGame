@@ -3,10 +3,6 @@ package tankgame.game.movable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- *
- * @author anthony-pc
- */
 public class TankControl implements KeyListener {
     private final Tank t1;
     private final int up;

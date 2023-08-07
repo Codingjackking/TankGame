@@ -2,7 +2,6 @@ package tankgame.game.movable;
 
 import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
-
 import java.awt.image.BufferedImage;
 
 public abstract class MovableObjects extends GameObject {

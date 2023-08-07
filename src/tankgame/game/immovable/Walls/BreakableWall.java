@@ -1,9 +1,8 @@
 package tankgame.game.immovable.Walls;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.Collidable;
 import tankgame.game.MapLoader;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

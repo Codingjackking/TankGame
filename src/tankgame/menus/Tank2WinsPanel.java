@@ -1,7 +1,6 @@
 package tankgame.menus;
 
 import tankgame.Launcher;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -34,9 +33,7 @@ public class Tank2WinsPanel extends JPanel {
         exit.addActionListener((actionEvent -> {
             this.lf.setFrame("end");
         }));
-
         this.add(exit);
-
     }
 
     @Override

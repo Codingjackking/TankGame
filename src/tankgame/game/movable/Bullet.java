@@ -1,14 +1,13 @@
 package tankgame.game.movable;
 
 import tankgame.GameConstants;
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.Animations;
 import tankgame.game.Collidable;
 import tankgame.game.GameObject;
 import tankgame.game.MapLoader;
 import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.Wall;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -37,6 +36,7 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
         this.tank = tank;
         this.damage = tank.getDamage();
     }
+
     public void update(MapLoader ml) {
         this.moveForwards();
         this.checkBorder();
@@ -54,7 +54,6 @@ public class Bullet extends MovableObjects implements Collidable { private Recta
 
     private void moveBound() {
         this.hitBox.setLocation((int) this.x, (int) this.y);
-
     }
 
     public void checkBorder() {

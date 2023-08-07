@@ -1,7 +1,6 @@
 package tankgame.menus;
 
 import tankgame.Launcher;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +26,6 @@ public class Tank1WinsPanel extends JPanel {
         this.setBackground(Color.BLACK);                                        // sets background black
         this.setLayout(null);
 
-
         exit = new JButton("Congrats!!");                                             // exits game
         exit.setSize(new Dimension(200,100));
         exit.setFont(new Font("Courier New", Font.BOLD ,24));
@@ -35,9 +33,7 @@ public class Tank1WinsPanel extends JPanel {
         exit.addActionListener((actionEvent -> {
             this.lf.setFrame("end");
         }));
-
         this.add(exit);
-
     }
 
     @Override

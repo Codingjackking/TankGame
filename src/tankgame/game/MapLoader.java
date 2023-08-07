@@ -1,7 +1,10 @@
 package tankgame.game;
 
 import tankgame.GameConstants;
-import tankgame.Resources.ResourceManager;
+import tankgame.game.immovable.Walls.BreakableWall;
+import tankgame.game.movable.Bullet;
+import tankgame.game.movable.Tank;
+import tankgame.resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,6 +14,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class MapLoader {
     private List<GameObject> gobjs;
@@ -29,22 +33,37 @@ public class MapLoader {
     }
 
     void resetMap() {
-        gobjs.forEach(GameObject::reset);
+        List<GameObject> copy = new ArrayList<>(gobjs);
+        copy.forEach(GameObject::reset);
+//        gobjs.forEach(GameObject::reset);
     }
 
-    void clearDeadObjects() {
-        this.gobjs.removeIf(gameObject -> gameObject.isDestroyed());
-    }
+    /*
+    Conflict with resetting of Map,
+    resulting in Walls and PowerUps being missing
+    */
+//    void clearDeadObjects() {
+//        this.gobjs.removeIf(GameObject::isDestroyed);
+//    }
 
     void updateMap() {
-        for (int i = 0; i < gobjs.size(); i++) {
+       /* for (GameObject gobj : gobjs) {
+            gobj.update(this);
+        }*/
+        IntStream.range(0, gobjs.size()).forEach(i -> {
             gobjs.get(i).update(this);
-        }
+            if (gobjs.get(i).isDestroyed()) {
+                if (gobjs.get(i) instanceof Bullet) {
+                    gobjs.remove(i);
+                } else if (gobjs.get(i) instanceof BreakableWall) {
+                    gobjs.remove(i);
+                }
+            }
+        });
     }
 
     void initMap() {
         this.gobjs = new ArrayList<>();
-
             /*
              * note class loaders read files from the out folder (build folder in Netbeans) and not the
              * current working directory.
@@ -83,6 +102,4 @@ public class MapLoader {
             gobjs.get(i).drawImage(g);
         }
     }
-
-
 }

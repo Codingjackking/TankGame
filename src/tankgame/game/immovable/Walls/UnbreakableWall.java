@@ -2,7 +2,6 @@ package tankgame.game.immovable.Walls;
 
 import tankgame.game.Collidable;
 import tankgame.game.MapLoader;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -44,6 +43,7 @@ public class UnbreakableWall extends Wall implements Collidable  {
     @Override
     public void collide(Collidable with) {
     }
+
     @Override
     public void drawImage(Graphics buffer) {
         Graphics2D g2d = (Graphics2D) buffer;
@@ -54,5 +54,4 @@ public class UnbreakableWall extends Wall implements Collidable  {
     public void reset() {
         this.destroyed = false;
     }
-
 }

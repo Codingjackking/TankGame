@@ -1,10 +1,9 @@
 package tankgame.game;
 
-import tankgame.Resources.ResourceManager;
+import tankgame.resources.ResourceManager;
 import tankgame.game.immovable.PowerUps.*;
 import tankgame.game.immovable.Walls.BreakableWall;
 import tankgame.game.immovable.Walls.UnbreakableWall;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
