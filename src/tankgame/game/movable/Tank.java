@@ -21,8 +21,8 @@ public class Tank extends MovableObjects implements Collidable {
     private MapLoader ml;
     private float x;
     private float y;
-    private float originalX;
-    private float originalY;
+//    private final float originalX;
+//    private final float originalY;
     private float vx;
     private float vy;
     private float angle;
@@ -34,7 +34,7 @@ public class Tank extends MovableObjects implements Collidable {
     private int health = 5;
     private int life = 3;
     private int shieldHealth;
-    private int speedBoostDuration = 0;
+//    private int speedBoostDuration = 0;
 
     private BufferedImage img;
     private boolean UpPressed;
@@ -64,8 +64,8 @@ public class Tank extends MovableObjects implements Collidable {
         super(ml, x, y, angle, img);
         this.x = x;
         this.y = y;
-        this.originalX = x;
-        this.originalY = y;
+//        this.originalX = x;
+//        this.originalY = y;
         this.vx = vx;
         this.vy = vy;
         this.img = img;
@@ -181,8 +181,8 @@ public class Tank extends MovableObjects implements Collidable {
     }
 
     private void die() {
-        this.life--;
-        this.health = 5;
+            this.life--;
+            this.health = 5;
     }
 
     // Method to fire the bullet
@@ -200,7 +200,7 @@ public class Tank extends MovableObjects implements Collidable {
     // Method to add health when the tank collides with the health power-up
     public void addHealth() {
         if (health < 5) {
-            health++;
+            this.health = 5;
         }
     }
 
@@ -261,8 +261,8 @@ public class Tank extends MovableObjects implements Collidable {
     }
 
     public void addSpeedBoost() {
-        speedBoostDuration = 1000; // Set the duration of the speed boost in milliseconds (adjust as needed)
-        R = 3; // Set the speed of the tank during the speed boost (adjust as needed)
+//        speedBoostDuration = 1000; // Set the duration of the speed boost in milliseconds (adjust as needed)
+        R += 1; // Set the speed of the tank during the speed boost (adjust as needed)
     }
     public void removeBullet(Bullet bullet) {
         ammo.remove(bullet);
@@ -302,7 +302,6 @@ public class Tank extends MovableObjects implements Collidable {
 
     @Override
     public void destroy() {
-
     }
 
     @Override
@@ -380,6 +379,8 @@ public class Tank extends MovableObjects implements Collidable {
         this.damage = 1;
         this.health = 5;
         this.life = 3;
+        this.shieldHealth = 0;
+        this.R = 2;
     }
 
     public Rectangle getHitBox() {
